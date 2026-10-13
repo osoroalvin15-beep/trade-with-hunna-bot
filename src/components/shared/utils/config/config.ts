@@ -10,6 +10,7 @@ import brandConfig from '../../../../../brand.config.json';
 export const PRODUCTION_DOMAINS = {
     COM: brandConfig.platform.hostname.production.com,
     LEGACY: brandConfig.platform.hostname.production.legacy,
+    RENDER: brandConfig.platform.hostname.production.render,
 } as const;
 
 // Staging app domains

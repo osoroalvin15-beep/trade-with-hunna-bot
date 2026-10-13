@@ -76,7 +76,8 @@
         "hostname": {
             "production": {
                 "com": "murogi-traders-hub.onrender.com",
-                "legacy": "trade-with-hunna-bot.onrender.com"
+                "legacy": "trade-with-hunna-bot.onrender.com",
+                "render": "murogi-traders-hub-hl4h.onrender.com"
             },
             "staging": {
                 "com": "murogi-traders-hub.onrender.com"
