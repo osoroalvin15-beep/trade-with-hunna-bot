@@ -1,5 +1,5 @@
 {
-    "brand_name": "Murogi Trading Hub",
+    "brand_name": "EA TRADERS",
     "brand_domain": "tradewithhunna.com",
     "brand_hostname": {
         "staging": "staging.tradewithhunna.com/dashboard",
@@ -58,16 +58,16 @@
         "css_variable_prefix": "--brand"
     },
     "platform": {
-        "name": "Murogi Bot",
+        "name": "EA TRADERS",
         "logo": {
             "type": "image",
             "component_name": "BrandLogo",
             "image_path": "/assets/branding/logo-mark-v2.png",
             "full_image_path": "/assets/branding/logo-v2.png",
-            "alt_text": "Murogi Trading Hub",
+            "alt_text": "EA TRADERS",
             "link_url": "/",
             "show_text": true,
-            "text": "Murogi Bot"
+            "text": "EA TRADERS"
         },
         "footer": {
             "enable_language_settings": false,

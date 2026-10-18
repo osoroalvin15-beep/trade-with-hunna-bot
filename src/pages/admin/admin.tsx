@@ -321,7 +321,7 @@ const AdminPage = () => {
     return (
         <div className='twh-admin'>
             <div className='twh-admin__topbar'>
-                <span className='twh-admin__brand'>Murogi Trading Hub — Admin</span>
+                <span className='twh-admin__brand'>EA TRADERS — Admin</span>
                 <a className='twh-admin__signout' onClick={handleSignOut}>
                     Sign out
                 </a>

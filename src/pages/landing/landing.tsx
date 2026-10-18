@@ -10,7 +10,7 @@ const HEADLINES = [
     'Trade with better tools.',
     'Simplify your market analysis.',
     'Trade smarter, not harder.',
-    'Welcome to Murogi Trading Hub.',
+    'Welcome to EA TRADERS.',
     'Sharp minds.',
     'Built for every kind of trader.',
     'Built for winners.',
@@ -149,7 +149,7 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            <footer className='landing__footer'>Murogi Trading Hub &middot; {localize('Powered by the Deriv API')}</footer>
+            <footer className='landing__footer'>EA TRADERS &middot; {localize('Powered by the Deriv API')}</footer>
         </div>
     );
 };

@@ -29,18 +29,7 @@ export default function ChunkLoader({ message }: { message: string }) {
             </div>
             <div className='brand-loader__card'>
                 <div className='brand-loader__stage'>
-                    <img src='/assets/branding/logo-v2.png' alt='Murogi Trading Hub' className='brand-loader__logo' />
-                    <svg className='brand-loader__glow' viewBox='0 0 1024 1024' aria-hidden='true'>
-                        <circle className='brand-loader__dot brand-loader__dot--main' r='9' fill='#fff' />
-                        <circle className='brand-loader__dot brand-loader__dot--arm-h' r='6' fill='#fff' />
-                        <circle className='brand-loader__dot brand-loader__dot--arm-v' r='6' fill='#fff' />
-                        <circle className='brand-loader__flash' cx='787' cy='258' r='16' fill='#fff' />
-                    </svg>
-                </div>
-
-                <div className='brand-loader__wordmark'>
-                    <span className='brand-loader__wordmark-a'>MUROGI</span>
-                    <span className='brand-loader__wordmark-b'>TRADING HUB</span>
+                    <img src='/assets/branding/logo-v2.png' alt='EA TRADERS' className='brand-loader__logo' />
                 </div>
                 <div className='brand-loader__subrow'>
                     <span className='brand-loader__subrow-label'>AUTOMATED TRADING</span>
@@ -51,7 +40,7 @@ export default function ChunkLoader({ message }: { message: string }) {
 
                 <hr className='brand-loader__rule' />
 
-                <h1 className='brand-loader__welcome'>Welcome to Murogi Trading Hub</h1>
+                <h1 className='brand-loader__welcome'>Welcome to EA TRADERS</h1>
                 <p className='brand-loader__tagline'>Empowering your financial journey.</p>
 
                 <div className='brand-loader__progress-track'>

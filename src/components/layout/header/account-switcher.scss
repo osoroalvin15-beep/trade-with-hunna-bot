@@ -145,6 +145,7 @@
     &__account-type {
         @include typeface(--xxsmall-left-normal-green);
 
+        color: var(--status-success);
         line-height: 1;
         margin: 0;
         font-size: var(--text-size-xxs);
@@ -152,7 +153,7 @@
 
     &--is-virtual {
         .acc-info__account-type {
-            color: $color-yellow;
+            color: var(--status-success);
         }
     }
 
@@ -809,7 +810,7 @@
         font-size: 1.4rem;
 
         &--virtual {
-            color: $color-yellow;
+            color: var(--status-success);
         }
     }
 
@@ -837,6 +838,13 @@
 
 .acc-flag {
     display: inline-flex;
+    flex-shrink: 0;
     overflow: hidden;
     border-radius: 50%;
+}
+
+.acc-info__flag,
+.acc-dropdown__flag {
+    margin-inline-end: 6px;
+    vertical-align: middle;
 }

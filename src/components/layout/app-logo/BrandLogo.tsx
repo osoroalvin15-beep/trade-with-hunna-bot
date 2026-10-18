@@ -1,4 +1,4 @@
-// Murogi Trading Hub brand mark (raster logo, see /public/assets/branding)
+// EA TRADERS brand mark (raster logo, see /public/assets/branding)
 import brandConfig from '@/../brand.config.json';
 
 type TBrandLogoProps = {
@@ -7,7 +7,7 @@ type TBrandLogoProps = {
     /** Unused for the raster mark; kept so existing width/height-only call sites keep compiling */
     fill?: string;
     className?: string;
-    /** Show the "Murogi Bot" wordmark next to the icon mark */
+    /** Show the "EA TRADERS" wordmark next to the icon mark */
     showText?: boolean;
 };
 

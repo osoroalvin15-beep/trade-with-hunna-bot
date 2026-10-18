@@ -153,7 +153,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                     <span className='acc-info__id' aria-hidden='true'></span>
                     <div className='acc-info__content'>
                         <div className='acc-info__account-type-header'>
-                            {!isVirtual && <UsFlagIcon size={16} className='acc-info__flag' />}
+                            <UsFlagIcon size={16} className='acc-info__flag' />
                             <Text as='p' size='xs' className='acc-info__account-type'>
                                 {isVirtual ? (
                                     <Localize i18n_default_text='Demo account' />
@@ -254,6 +254,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                                 )}
                             </Text>
                             <Text size='xs' weight='bold' className='acc-dropdown__balance'>
+                                <UsFlagIcon size={14} className='acc-dropdown__flag' />
                                 {account.currency ? (
                                     `${account.balance} ${getCurrencyDisplayCode(account.currency)}`
                                 ) : (
