@@ -32,7 +32,7 @@ export const BrandLogo = ({ width, height = 32, className = '', showText }: TBra
             {should_show_text && (
                 <span
                     className='brand-logo__text'
-                    style={{ fontWeight: 800, fontSize: `${Math.max(height * 0.5, 14)}px`, color: 'inherit' }}
+                    style={{ fontWeight: 800, fontSize: `${Math.max(height * 0.5, 14)}px`, color: '#ffffff' }}
                 >
                     {logo_config.text}
                 </span>
