@@ -8,76 +8,19 @@ import { useApiBase } from '@/hooks/useApiBase';
 import { useStore } from '@/hooks/useStore';
 import { isDemoAccount } from '@/utils/account-helpers';
 import UsFlagIcon from './us-flag-icon';
-import { Localize, localize } from '@deriv-com/translations';
+import { Localize } from '@deriv-com/translations';
 import { TAccountSwitcher } from './common/types';
 import AccountInfoWrapper from './account-info-wrapper';
 import './account-switcher.scss';
 
 const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isReloading, setIsReloading] = useState(false);
-    const [reloadError, setReloadError] = useState('');
     const wrapperRef = useRef<HTMLDivElement>(null);
     const { accountList, activeLoginid } = useApiBase();
     const { client, run_panel } = useStore() ?? {};
 
     const is_bot_running = run_panel?.is_running || api_base.is_running;
     const isSingleAccount = !accountList || accountList.length <= 1;
-
-    const handleReloadDemoBalance = useCallback(
-        async (e: React.MouseEvent) => {
-            e.stopPropagation(); // don't also trigger the dropdown toggle
-            if (isReloading) return;
-            if (!api_base.api) {
-                setReloadError(localize('Not connected. Please try again in a moment.'));
-                return;
-            }
-            setIsReloading(true);
-            setReloadError('');
-            try {
-                // TApiBaseApi's declared 'send' return type is void (a pre-existing
-                // gap - the actual runtime call is a Promise, same class of issue as
-                // the 'balance' method elsewhere in this codebase). Narrow-casting
-                // locally rather than widening the shared type, since doing that
-                // for 'balance' previously cascaded into unrelated errors.
-                const sendApi = api_base.api as unknown as {
-                    send: (data: unknown) => Promise<{
-                        topup_virtual?: { amount?: number };
-                        error?: { message?: string };
-                    }>;
-                };
-                const response = await sendApi.send({ topup_virtual: 1 });
-                if (response?.error) {
-                    throw new Error(response.error.message || localize('Could not reload demo balance.'));
-                }
-
-                // Don't just wait passively on the balance push subscription to
-                // reflect the top-up - actively refetch right away so the
-                // displayed number updates immediately instead of depending on
-                // a push message that may be delayed or (per earlier findings
-                // in this app) not fire reliably.
-                const balanceApi = api_base.api as unknown as {
-                    balance: () => Promise<{
-                        balance?: { balance?: number; currency?: string };
-                        error?: unknown;
-                    }>;
-                };
-                const balance_res = await balanceApi.balance();
-                if (!balance_res?.error && balance_res?.balance && typeof balance_res.balance.balance === 'number') {
-                    client?.setBalance(balance_res.balance.balance.toString());
-                    if (balance_res.balance.currency) {
-                        client?.setCurrency(balance_res.balance.currency);
-                    }
-                }
-            } catch (err) {
-                setReloadError(err instanceof Error ? err.message : localize('Could not reload demo balance.'));
-                setTimeout(() => setReloadError(''), 4000);
-            } finally {
-                setIsReloading(false);
-            }
-        },
-        [isReloading]
-    );
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -193,31 +136,8 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                                         `${balance} ${getCurrencyDisplayCode(currency)}`
                                     )}
                                 </p>
-                                {isVirtual && currency && (
-                                    <button
-                                        type='button'
-                                        className={classNames('acc-info__reload-balance', {
-                                            'acc-info__reload-balance--spinning': isReloading,
-                                        })}
-                                        title={localize('Reload demo balance to 10,000')}
-                                        aria-label={localize('Reload demo balance')}
-                                        disabled={isReloading}
-                                        onClick={handleReloadDemoBalance}
-                                    >
-                                        <svg width='14' height='14' viewBox='0 0 16 16' fill='none'>
-                                            <path
-                                                d='M13.5 8a5.5 5.5 0 1 1-1.6-3.89M13.5 2v3.5H10'
-                                                stroke='currentColor'
-                                                strokeWidth='1.4'
-                                                strokeLinecap='round'
-                                                strokeLinejoin='round'
-                                            />
-                                        </svg>
-                                    </button>
-                                )}
                             </div>
                         )}
-                        {reloadError && <p className='acc-info__reload-error'>{reloadError}</p>}
                     </div>
                 </div>
             </AccountInfoWrapper>
