@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from 'react';
+import { CSSProperties, ReactNode, useMemo, useState } from 'react';
 import {
     classifyEvenOdd,
     classifyMatchDiffer,
@@ -117,7 +117,15 @@ const OutcomePanel = ({
                     <div key={side.label} className={`twh-bar twh-tone-${side.tone}`}>
                         <span className='twh-bar__label'>{side.label}</span>
                         <div className='twh-bar__track'>
-                            <div className='twh-bar__fill' style={{ width: `${Math.min(side.pct, 100)}%` }} />
+                            <div
+                                className='twh-bar__fill'
+                                style={
+                                    {
+                                        width: `${Math.min(side.pct, 100)}%`,
+                                        '--p': Math.min(side.pct, 100) / 100,
+                                    } as CSSProperties
+                                }
+                            />
                         </div>
                         <span className='twh-bar__pct'>{side.pct.toFixed(1)}%</span>
                     </div>
@@ -148,6 +156,7 @@ const DigitTools = () => {
     const [tickCount, setTickCount] = useState(100);
     const [barrier, setBarrier] = useState(5);
     const [matchDigit, setMatchDigit] = useState(5);
+    const [showDisclaimer, setShowDisclaimer] = useState(false);
 
     const { digits, prices, latestPrice, connected, error } = useDigitStream(symbol, tickCount);
 
@@ -287,11 +296,21 @@ const DigitTools = () => {
             </div>
 
             <div className='twh-digit-tools__disclaimer'>
-                <span className='twh-digit-tools__disclaimer-icon'>&#9888;</span>
-                <span>
-                    <strong>Risk Disclaimer:</strong> For informational purposes only. Past digit frequency does not
-                    predict future outcomes.
-                </span>
+                <button
+                    type='button'
+                    className={`twh-disclaimer-btn ${showDisclaimer ? 'is-open' : ''}`}
+                    onClick={() => setShowDisclaimer(v => !v)}
+                    aria-expanded={showDisclaimer}
+                    aria-controls='twh-risk-disclaimer'
+                >
+                    <span aria-hidden='true'>&#9888;</span> Risk disclaimer
+                </button>
+                {showDisclaimer && (
+                    <div id='twh-risk-disclaimer' className='twh-disclaimer-text' role='region'>
+                        For informational purposes only. Past digit frequency does not predict future outcomes, and
+                        trading can result in the loss of your stake. Only trade with money you can afford to lose.
+                    </div>
+                )}
             </div>
         </div>
     );
