@@ -1,4 +1,13 @@
-import { useMemo, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
+import {
+    classifyEvenOdd,
+    classifyMatchDiffer,
+    classifyOverUnder,
+    classifyRiseFall,
+    currentStreak,
+    digitPercents,
+    sharePercent,
+} from './analysis-utils';
 import { useDigitStream } from './use-digit-stream';
 import './digit-tools.scss';
 
@@ -16,61 +25,121 @@ const SYMBOLS = [
 ];
 
 const TICK_COUNT_OPTIONS = [25, 50, 100, 250, 500, 1000];
+const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const CHIPS_COLLAPSED = 10;
+const CHIPS_EXPANDED = 40;
 
-const RING_COLORS = [
-    '#ff5a5a',
-    '#ff6b4a',
-    '#ffb84a',
-    '#f4d35e',
-    '#8bd17c',
-    '#2ed8a7',
-    '#4ad0d0',
-    '#5b8cff',
-    '#a76bff',
-    '#ff6bc9',
-];
-
-const RADIUS = 26;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+type TTone = 'a' | 'b' | 'c';
 
 const DigitRing = ({
     digit,
     percent,
-    relativeFill,
     isHot,
     isCold,
+    isCurrent,
 }: {
     digit: number;
     percent: number;
-    relativeFill: number;
     isHot: boolean;
     isCold: boolean;
+    isCurrent: boolean;
+}) => (
+    <div
+        className={[
+            'twh-ring',
+            isHot ? 'twh-ring--hot' : '',
+            isCold ? 'twh-ring--cold' : '',
+            isCurrent ? 'twh-ring--current' : '',
+        ]
+            .filter(Boolean)
+            .join(' ')}
+    >
+        <span className='twh-ring__digit'>{digit}</span>
+        <span className='twh-ring__pct'>{percent.toFixed(1)}%</span>
+        {isCurrent && <span className='twh-ring__pointer' aria-label='Latest digit' />}
+    </div>
+);
+
+const DigitPicker = ({ value, onChange, label }: { value: number; onChange: (d: number) => void; label: string }) => (
+    <div className='twh-picker' role='group' aria-label={label}>
+        {DIGITS.map(d => (
+            <button
+                key={d}
+                type='button'
+                className={`twh-picker__btn ${d === value ? 'is-active' : ''}`}
+                onClick={() => onChange(d)}
+                aria-pressed={d === value}
+            >
+                {d}
+            </button>
+        ))}
+    </div>
+);
+
+type TSide = { label: string; pct: number; tone: TTone };
+
+const OutcomePanel = ({
+    title,
+    sides,
+    outcomes,
+    toneFor,
+    labelFor,
+    footnote,
+    children,
+}: {
+    title: string;
+    sides: [TSide, TSide];
+    outcomes: string[];
+    toneFor: (letter: string) => TTone;
+    labelFor: (letter: string) => string;
+    footnote?: string;
+    children?: ReactNode;
 }) => {
-    const offset = CIRCUMFERENCE * (1 - relativeFill / 100);
+    const [expanded, setExpanded] = useState(false);
+    const streak = currentStreak(outcomes);
+    const visible = outcomes.slice(-(expanded ? CHIPS_EXPANDED : CHIPS_COLLAPSED));
 
     return (
-        <div className={`twh-digit-ring ${isHot ? 'twh-digit-ring--hot' : ''} ${isCold ? 'twh-digit-ring--cold' : ''}`}>
-            <svg width='64' height='64' viewBox='0 0 64 64'>
-                <circle className='twh-digit-ring__track' cx='32' cy='32' r={RADIUS} />
-                <circle
-                    className='twh-digit-ring__fill'
-                    cx='32'
-                    cy='32'
-                    r={RADIUS}
-                    stroke={RING_COLORS[digit]}
-                    strokeDasharray={CIRCUMFERENCE}
-                    strokeDashoffset={offset}
-                />
-                <text x='32' y='29' textAnchor='middle' className='twh-digit-ring__digit'>
-                    {digit}
-                </text>
-                <text x='32' y='42' textAnchor='middle' className='twh-digit-ring__pct'>
-                    {percent.toFixed(2)}%
-                </text>
-            </svg>
-            {isHot && <span className='twh-digit-ring__badge twh-digit-ring__badge--hot'>Hot</span>}
-            {isCold && <span className='twh-digit-ring__badge twh-digit-ring__badge--cold'>Cold</span>}
-        </div>
+        <section className='twh-panel'>
+            <header className='twh-panel__head'>
+                <h3 className='twh-panel__title'>{title}</h3>
+                {streak.letter && (
+                    <span className={`twh-panel__streak twh-tone-${toneFor(streak.letter)}`}>
+                        {streak.length}x {labelFor(streak.letter)}
+                    </span>
+                )}
+            </header>
+
+            {children}
+
+            <div className='twh-panel__bars'>
+                {sides.map(side => (
+                    <div key={side.label} className={`twh-bar twh-tone-${side.tone}`}>
+                        <span className='twh-bar__label'>{side.label}</span>
+                        <div className='twh-bar__track'>
+                            <div className='twh-bar__fill' style={{ width: `${Math.min(side.pct, 100)}%` }} />
+                        </div>
+                        <span className='twh-bar__pct'>{side.pct.toFixed(1)}%</span>
+                    </div>
+                ))}
+            </div>
+
+            {footnote && <div className='twh-panel__footnote'>{footnote}</div>}
+
+            <div className='twh-panel__chips'>
+                {visible.map((letter, i) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <span key={i} className={`twh-chip twh-tone-${toneFor(letter)}`}>
+                        {letter}
+                    </span>
+                ))}
+                {outcomes.length > CHIPS_COLLAPSED && (
+                    <button type='button' className='twh-chip-more' onClick={() => setExpanded(v => !v)}>
+                        {expanded ? '− Less' : '+ More'}
+                    </button>
+                )}
+            </div>
+        </section>
     );
 };
 
@@ -78,60 +147,58 @@ const DigitTools = () => {
     const [symbol, setSymbol] = useState('R_100');
     const [tickCount, setTickCount] = useState(100);
     const [barrier, setBarrier] = useState(5);
-    const [showMore, setShowMore] = useState(false);
+    const [matchDigit, setMatchDigit] = useState(5);
 
-    const { digits, connected, error } = useDigitStream(symbol, tickCount);
+    const { digits, prices, latestPrice, connected, error } = useDigitStream(symbol, tickCount);
 
     const stats = useMemo(() => {
-        const counts = new Array(10).fill(0);
-        digits.forEach(d => {
-            if (d >= 0 && d <= 9) counts[d] += 1;
-        });
-        const total = digits.length || 1;
-        const percents = counts.map(c => (c / total) * 100);
-        const maxPercent = Math.max(...percents, 0.0001);
-        const minPercent = digits.length ? Math.min(...percents) : 0;
-        const hotDigit = digits.length ? percents.indexOf(maxPercent) : -1;
-        const coldDigit = digits.length ? percents.indexOf(minPercent) : -1;
+        const percents = digitPercents(digits);
+        const hasData = digits.length > 0;
+        const maxPct = Math.max(...percents);
+        const minPct = Math.min(...percents);
 
-        const overCount = digits.filter(d => d > barrier).length;
-        const underCount = digits.filter(d => d <= barrier).length;
-        const overPct = digits.length ? (overCount / digits.length) * 100 : 0;
-        const underPct = digits.length ? (underCount / digits.length) * 100 : 0;
+        const overUnder = classifyOverUnder(digits, barrier);
+        const evenOdd = classifyEvenOdd(digits);
+        const matchDiffer = classifyMatchDiffer(digits, matchDigit);
+        const riseFall = classifyRiseFall(prices);
 
-        const classifications = digits.map(d => (d > barrier ? 'O' : 'U'));
-
-        let streak = 0;
-        let streakType: 'O' | 'U' | null = null;
-        for (let i = classifications.length - 1; i >= 0; i -= 1) {
-            if (streakType === null) {
-                streakType = classifications[i] as 'O' | 'U';
-                streak = 1;
-            } else if (classifications[i] === streakType) {
-                streak += 1;
-            } else {
-                break;
-            }
-        }
-
-        return { counts, percents, maxPercent, hotDigit, coldDigit, overPct, underPct, classifications, streak, streakType };
-    }, [digits, barrier]);
-
-    const visibleOutcomes = showMore ? stats.classifications.slice(-30) : stats.classifications.slice(-10);
+        return {
+            percents,
+            hotDigit: hasData ? percents.indexOf(maxPct) : -1,
+            coldDigit: hasData ? percents.indexOf(minPct) : -1,
+            currentDigit: hasData ? digits[digits.length - 1] : -1,
+            overUnder,
+            overPct: sharePercent(overUnder, 'O'),
+            underPct: sharePercent(overUnder, 'U'),
+            tiePct: sharePercent(overUnder, '='),
+            evenOdd,
+            evenPct: sharePercent(evenOdd, 'E'),
+            oddPct: sharePercent(evenOdd, 'O'),
+            matchDiffer,
+            matchPct: sharePercent(matchDiffer, 'M'),
+            differPct: sharePercent(matchDiffer, 'D'),
+            riseFall,
+            risePct: sharePercent(riseFall, 'R'),
+            fallPct: sharePercent(riseFall, 'F'),
+        };
+    }, [digits, prices, barrier, matchDigit]);
 
     return (
         <div className='twh-digit-tools'>
             <div className='twh-digit-tools__header'>
-                <div className='twh-digit-tools__label'>D-Circles &amp; Analysis</div>
                 <div className='twh-digit-tools__controls'>
-                    <select value={symbol} onChange={e => setSymbol(e.target.value)}>
+                    <select value={symbol} onChange={e => setSymbol(e.target.value)} aria-label='Market'>
                         {SYMBOLS.map(s => (
                             <option key={s.value} value={s.value}>
                                 {s.label}
                             </option>
                         ))}
                     </select>
-                    <select value={tickCount} onChange={e => setTickCount(Number(e.target.value))}>
+                    <select
+                        value={tickCount}
+                        onChange={e => setTickCount(Number(e.target.value))}
+                        aria-label='Number of ticks'
+                    >
                         {TICK_COUNT_OPTIONS.map(n => (
                             <option key={n} value={n}>
                                 Last {n} ticks
@@ -141,6 +208,10 @@ const DigitTools = () => {
                     <span className={`twh-digit-tools__status ${connected ? 'is-live' : ''}`}>
                         <span className='dot' /> {connected ? 'Live' : 'Connecting...'}
                     </span>
+                </div>
+                <div className='twh-digit-tools__price'>
+                    <span className='twh-digit-tools__price-label'>Live price</span>
+                    <span className='twh-digit-tools__price-value'>{latestPrice ?? '—'}</span>
                 </div>
             </div>
 
@@ -152,75 +223,75 @@ const DigitTools = () => {
                         key={digit}
                         digit={digit}
                         percent={pct}
-                        relativeFill={digits.length ? Math.max((pct / stats.maxPercent) * 100, 8) : 0}
-                        isHot={digits.length > 0 && digit === stats.hotDigit}
-                        isCold={digits.length > 0 && digit === stats.coldDigit}
+                        isHot={digit === stats.hotDigit}
+                        isCold={digit === stats.coldDigit}
+                        isCurrent={digit === stats.currentDigit}
                     />
                 ))}
             </div>
+            <div className='twh-digit-tools__legend'>
+                <span className='twh-legend twh-legend--hot'>Most frequent</span>
+                <span className='twh-legend twh-legend--cold'>Least frequent</span>
+                <span className='twh-legend twh-legend--current'>Latest digit</span>
+            </div>
 
-            <div className='twh-digit-tools__analysis'>
-                <div className='twh-digit-tools__analysis-top'>
-                    <span>Over/Under Analysis</span>
-                    <span className='twh-digit-tools__streak'>
-                        Current streak: <strong>{stats.streak}x {stats.streakType === 'O' ? 'Over' : stats.streakType === 'U' ? 'Under' : '-'}</strong>
-                    </span>
-                </div>
+            <div className='twh-digit-tools__grid'>
+                <OutcomePanel
+                    title='Over / Under'
+                    sides={[
+                        { label: 'Over', pct: stats.overPct, tone: 'a' },
+                        { label: 'Under', pct: stats.underPct, tone: 'b' },
+                    ]}
+                    outcomes={stats.overUnder}
+                    toneFor={l => (l === 'O' ? 'a' : l === 'U' ? 'b' : 'c')}
+                    labelFor={l => (l === 'O' ? 'Over' : l === 'U' ? 'Under' : 'Tie')}
+                    footnote={`Digit equal to ${barrier}: ${stats.tiePct.toFixed(1)}% (counts for neither side)`}
+                >
+                    <DigitPicker value={barrier} onChange={setBarrier} label='Over/Under barrier' />
+                </OutcomePanel>
 
-                <div className='twh-digit-tools__barrier-row'>
-                    {Array.from({ length: 10 }, (_, d) => d).map(d => (
-                        <button
-                            key={d}
-                            className={`twh-digit-tools__barrier-btn ${d === barrier ? 'is-active' : ''}`}
-                            onClick={() => setBarrier(d)}
-                        >
-                            {d}
-                        </button>
-                    ))}
-                </div>
+                <OutcomePanel
+                    title='Match / Differ'
+                    sides={[
+                        { label: 'Match', pct: stats.matchPct, tone: 'a' },
+                        { label: 'Differ', pct: stats.differPct, tone: 'b' },
+                    ]}
+                    outcomes={stats.matchDiffer}
+                    toneFor={l => (l === 'M' ? 'a' : 'b')}
+                    labelFor={l => (l === 'M' ? 'Match' : 'Differ')}
+                >
+                    <DigitPicker value={matchDigit} onChange={setMatchDigit} label='Match digit' />
+                </OutcomePanel>
 
-                <div className='twh-digit-tools__bars'>
-                    <div className='twh-digit-tools__bar twh-digit-tools__bar--over'>
-                        <div className='twh-digit-tools__bar-label'>
-                            <span>Over {barrier}</span>
-                        </div>
-                        <div className='twh-digit-tools__bar-pct'>{stats.overPct.toFixed(1)}%</div>
-                        <div className='twh-digit-tools__bar-track'>
-                            <div className='twh-digit-tools__bar-fill' style={{ width: `${stats.overPct}%` }} />
-                        </div>
-                    </div>
-                    <div className='twh-digit-tools__bar twh-digit-tools__bar--under'>
-                        <div className='twh-digit-tools__bar-label'>
-                            <span>Under {barrier}</span>
-                        </div>
-                        <div className='twh-digit-tools__bar-pct'>{stats.underPct.toFixed(1)}%</div>
-                        <div className='twh-digit-tools__bar-track'>
-                            <div className='twh-digit-tools__bar-fill' style={{ width: `${stats.underPct}%` }} />
-                        </div>
-                    </div>
-                </div>
+                <OutcomePanel
+                    title='Even / Odd'
+                    sides={[
+                        { label: 'Even', pct: stats.evenPct, tone: 'a' },
+                        { label: 'Odd', pct: stats.oddPct, tone: 'b' },
+                    ]}
+                    outcomes={stats.evenOdd}
+                    toneFor={l => (l === 'E' ? 'a' : 'b')}
+                    labelFor={l => (l === 'E' ? 'Even' : 'Odd')}
+                />
 
-                <div className='twh-digit-tools__outcomes'>
-                    {visibleOutcomes.map((c, i) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <span key={i} className={`twh-digit-tools__chip ${c === 'O' ? 'is-over' : 'is-under'}`}>
-                            {c}
-                        </span>
-                    ))}
-                    {stats.classifications.length > 10 && (
-                        <button className='twh-digit-tools__more' onClick={() => setShowMore(v => !v)}>
-                            {showMore ? 'Less' : 'More'}
-                        </button>
-                    )}
-                </div>
+                <OutcomePanel
+                    title='Rise / Fall'
+                    sides={[
+                        { label: 'Rise', pct: stats.risePct, tone: 'a' },
+                        { label: 'Fall', pct: stats.fallPct, tone: 'b' },
+                    ]}
+                    outcomes={stats.riseFall}
+                    toneFor={l => (l === 'R' ? 'a' : 'b')}
+                    labelFor={l => (l === 'R' ? 'Rise' : 'Fall')}
+                />
+            </div>
 
-                <div className='twh-digit-tools__disclaimer'>
-                    <span className='twh-digit-tools__disclaimer-icon'>&#9888;</span>
-                    <span>
-                        <strong>Risk Disclaimer:</strong> For informational purposes only. Past digit frequency does
-                        not predict future outcomes.
-                    </span>
-                </div>
+            <div className='twh-digit-tools__disclaimer'>
+                <span className='twh-digit-tools__disclaimer-icon'>&#9888;</span>
+                <span>
+                    <strong>Risk Disclaimer:</strong> For informational purposes only. Past digit frequency does not
+                    predict future outcomes.
+                </span>
             </div>
         </div>
     );

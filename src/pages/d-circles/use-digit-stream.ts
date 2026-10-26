@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const APP_ID = '340wutvNtAldWVNWazqCC';
 // Deriv has been migrating to a newer "Options Trading API" domain. Since this
@@ -13,9 +13,15 @@ const MAX_RETRY_DELAY_MS = 15000;
 const BASE_RETRY_DELAY_MS = 1000;
 const CONNECT_TIMEOUT_MS = 8000;
 
+type TTick = { quote: number; digit: number };
+
 export interface DigitStreamResult {
     /** Last digit of each tick's quote, oldest first, newest last. */
     digits: number[];
+    /** Raw quote of each tick, same order as `digits`. */
+    prices: number[];
+    /** Newest quote formatted with the market's decimal places, or null before the first tick. */
+    latestPrice: string | null;
     connected: boolean;
     error: string | null;
 }
@@ -34,13 +40,13 @@ export interface DigitStreamResult {
  * networks, sleeping tabs, or transient server hiccups.
  */
 export function useDigitStream(symbol: string, maxTicks: number): DigitStreamResult {
-    const [digits, setDigits] = useState<number[]>([]);
+    const [ticks, setTicks] = useState<TTick[]>([]);
     const [connected, setConnected] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const decimalsRef = useRef<number>(2);
 
     useEffect(() => {
-        setDigits([]);
+        setTicks([]);
         setError(null);
         setConnected(false);
         decimalsRef.current = 2;
@@ -130,14 +136,15 @@ export function useDigitStream(symbol: string, maxTicks: number): DigitStreamRes
 
                 if (data.msg_type === 'history' && data.history?.prices) {
                     const prices: number[] = data.history.prices.map((p: string | number) => Number(p));
-                    setDigits(prices.map(toDigit));
+                    setTicks(prices.map(quote => ({ quote, digit: toDigit(quote) })));
                     return;
                 }
 
                 if (data.msg_type === 'tick' && data.tick) {
-                    const digit = toDigit(Number(data.tick.quote));
-                    setDigits(prev => {
-                        const next = [...prev, digit];
+                    const quote = Number(data.tick.quote);
+                    const tick = { quote, digit: toDigit(quote) };
+                    setTicks(prev => {
+                        const next = [...prev, tick];
                         return next.length > maxTicks ? next.slice(next.length - maxTicks) : next;
                     });
                 }
@@ -171,5 +178,10 @@ export function useDigitStream(symbol: string, maxTicks: number): DigitStreamRes
         };
     }, [symbol, maxTicks]);
 
-    return { digits, connected, error };
+    const digits = useMemo(() => ticks.map(t => t.digit), [ticks]);
+    const prices = useMemo(() => ticks.map(t => t.quote), [ticks]);
+    const latest = ticks.length ? ticks[ticks.length - 1].quote : null;
+    const latestPrice = latest === null ? null : latest.toFixed(decimalsRef.current);
+
+    return { digits, prices, latestPrice, connected, error };
 }
