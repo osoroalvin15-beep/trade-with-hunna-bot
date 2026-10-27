@@ -1,28 +1,31 @@
-// EA Traders Analysis Tool: bold, glass-style panels in navy / teal / coral / gold.
+// EA Traders Analysis Tool: metal bezels, glass faces and glowing dials on deep navy.
 .twh-digit-tools {
-    --dt-bg: linear-gradient(160deg, #070e2b 0%, #0b1a52 55%, #0a1438 100%);
-    --dt-border: rgba(255, 255, 255, 0.2);
+    --dt-bg: linear-gradient(165deg, #060d2b 0%, #0a1a55 55%, #081038 100%);
     --dt-divider: rgba(255, 255, 255, 0.16);
     --dt-text: #f4f7ff;
     --dt-dim: #b4c1e6;
-    --dt-teal: #14f1d9;
-    --dt-coral: #ff4d6d;
+    --dt-teal: #1ee6cf;
+    --dt-coral: #ff5470;
     --dt-gold: #ffc83d;
+    --dt-blue: #4f86ff;
     --dt-neutral: #8da0d0;
-    --dt-teal-rgb: 20, 241, 217;
-    --dt-coral-rgb: 255, 77, 109;
+    --dt-teal-rgb: 30, 230, 207;
+    --dt-coral-rgb: 255, 84, 112;
     --dt-gold-rgb: 255, 200, 61;
+    --dt-blue-rgb: 79, 134, 255;
     --dt-neutral-rgb: 141, 160, 208;
 
     background: var(--dt-bg);
-    border: 1px solid var(--dt-border);
-    border-radius: 18px;
-    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    padding: 22px;
     margin-top: 18px;
     text-align: left;
     color: var(--dt-text);
     font-weight: 600;
-    box-shadow: 0 10px 36px rgba(2, 6, 24, 0.5);
+    box-shadow:
+        0 12px 40px rgba(2, 6, 24, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
     &__header {
         display: flex;
@@ -31,25 +34,26 @@
         justify-content: space-between;
         gap: 12px;
         padding-bottom: 16px;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
         border-bottom: 1px solid var(--dt-divider);
     }
 
     &__controls {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         flex-wrap: wrap;
 
         select {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.28);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.28),
+                0 3px 8px rgba(0, 0, 0, 0.3);
             color: var(--dt-text);
             font-size: 13px;
             font-weight: 800;
-            padding: 9px 12px;
+            padding: 10px 14px;
             border-radius: 12px;
 
             option {
@@ -93,13 +97,13 @@
     &__price-label {
         font-size: 10px;
         font-weight: 800;
-        letter-spacing: 0.16em;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--dt-dim);
     }
 
     &__price-value {
-        font-size: 28px;
+        font-size: 30px;
         font-weight: 900;
         color: var(--dt-gold);
         text-shadow: 0 0 14px rgba(var(--dt-gold-rgb), 0.45);
@@ -119,21 +123,22 @@
 
     &__rings {
         display: grid;
-        grid-template-columns: repeat(10, minmax(0, 92px));
+        grid-template-columns: repeat(10, minmax(0, 96px));
         justify-content: center;
-        gap: 14px;
-        padding-bottom: 22px;
+        gap: 18px;
+        padding: 8px 0 34px;
     }
 
     &__legend {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 18px;
-        padding-bottom: 16px;
-        margin-bottom: 18px;
+        align-items: center;
+        gap: 22px;
+        padding-bottom: 18px;
+        margin-bottom: 20px;
         border-bottom: 1px solid var(--dt-divider);
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 800;
         color: var(--dt-dim);
     }
@@ -141,38 +146,57 @@
     &__grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+        gap: 16px;
     }
 
     &__disclaimer {
-        margin-top: 18px;
-        padding-top: 16px;
+        margin-top: 20px;
+        padding-top: 18px;
         border-top: 1px solid var(--dt-divider);
     }
 }
 
+// ---- risk disclaimer: brushed-metal bar ----
 .twh-disclaimer-btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 9px 14px;
-    font-size: 12px;
+    justify-content: space-between;
+    width: min(100%, 420px);
+    padding: 11px 16px;
+    font-size: 13px;
     font-weight: 800;
-    color: #ffe08a;
-    background: rgba(var(--dt-gold-rgb), 0.14);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(var(--dt-gold-rgb), 0.55);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #ffe9ad;
+    background: linear-gradient(180deg, #4a567f 0%, #252f55 48%, #333e69 100%);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 4px 10px rgba(0, 0, 0, 0.4);
     border-radius: 12px;
     cursor: pointer;
 
-    &.is-open {
-        background: rgba(var(--dt-gold-rgb), 0.26);
+    &__label {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    &__chevron {
+        width: 9px;
+        height: 9px;
+        border-right: 2px solid #ffe9ad;
+        border-bottom: 2px solid #ffe9ad;
+        transform: rotate(45deg) translate(-2px, -2px);
+        transition: transform 0.2s ease;
+    }
+
+    &.is-open &__chevron {
+        transform: rotate(-135deg) translate(-2px, -2px);
     }
 }
 
 .twh-disclaimer-text {
     margin-top: 10px;
+    max-width: 640px;
     padding: 12px 14px;
     font-size: 12px;
     font-weight: 700;
@@ -183,143 +207,212 @@
     border-radius: 12px;
 }
 
+// ---- legend ----
 .twh-legend {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
 
     &::before {
         content: '';
-        width: 11px;
-        height: 11px;
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
-        border: 2px solid var(--dt-neutral);
+        border: 3px solid var(--dt-neutral);
     }
 
     &--hot::before {
         border-color: var(--dt-teal);
-        box-shadow: 0 0 8px var(--dt-teal);
+        box-shadow: 0 0 10px var(--dt-teal);
     }
 
     &--cold::before {
         border-color: var(--dt-coral);
-        box-shadow: 0 0 8px var(--dt-coral);
+        box-shadow: 0 0 10px var(--dt-coral);
     }
 
     &--current::before {
-        border: 0;
-        border-radius: 0;
-        width: 0;
-        height: 0;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-bottom: 9px solid var(--dt-gold);
+        display: none;
+    }
+
+    &__gear {
+        color: var(--dt-gold);
+        filter: drop-shadow(0 0 5px rgba(var(--dt-gold-rgb), 0.7));
     }
 }
 
-// ---- glass digit circles ----
+// ---- dial-style digit circles ----
 .twh-ring {
+    --spark: var(--dt-blue-rgb);
+    --glow: rgba(var(--dt-blue-rgb), 0.35);
+    --bezel: linear-gradient(145deg, #f4f7ff 0%, #93a8e0 26%, #3a54a6 52%, #a4b6ec 78%, #e9eeff 100%);
+    --face: radial-gradient(circle at 35% 25%, #6288ea 0%, #243f9f 48%, #0d1c5b 100%);
     position: relative;
     aspect-ratio: 1;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     border-radius: 50%;
-    overflow: visible;
-    border: 2px solid rgba(96, 156, 255, 0.85);
-    background: radial-gradient(circle at 30% 25%, rgba(96, 156, 255, 0.55), rgba(40, 90, 255, 0.14) 65%);
-    backdrop-filter: blur(10px);
+    padding: 7%;
+    background: var(--bezel);
     box-shadow:
-        inset 0 2px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -10px 18px rgba(0, 0, 0, 0.3),
-        0 6px 14px rgba(0, 0, 0, 0.35);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+        0 10px 20px rgba(0, 0, 0, 0.5),
+        0 0 16px var(--glow),
+        inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    transition: transform 0.2s ease;
 
-    // glossy highlight on the upper half
-    &::before {
-        content: '';
-        position: absolute;
-        top: 6%;
-        left: 18%;
-        width: 64%;
-        height: 30%;
+    &__face {
+        position: relative;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         border-radius: 50%;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-        pointer-events: none;
+        background: var(--face);
+        box-shadow:
+            inset 0 4px 10px rgba(0, 0, 0, 0.65),
+            inset 0 -2px 5px rgba(255, 255, 255, 0.22);
+
+        // glass highlight
+        &::before {
+            content: '';
+            position: absolute;
+            top: 6%;
+            left: 20%;
+            width: 60%;
+            height: 28%;
+            border-radius: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+            pointer-events: none;
+        }
+    }
+
+    // thin dial arc along the inner edge (a full circle = 20% of ticks)
+    &__arc {
+        position: absolute;
+        inset: 5%;
+        border-radius: 50%;
+        background: conic-gradient(
+            from 200deg,
+            rgba(255, 255, 255, 0.7) 0,
+            rgba(255, 255, 255, 0.7) var(--arc, 0%),
+            transparent var(--arc, 0%)
+        );
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+        mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+        opacity: 0.55;
     }
 
     &__digit {
         position: relative;
-        font-size: clamp(16px, 2.4vw, 26px);
+        font-size: clamp(18px, 2.7vw, 29px);
         font-weight: 900;
         line-height: 1;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     }
 
     &__pct {
         position: relative;
-        font-size: clamp(9px, 1.15vw, 12px);
+        font-size: clamp(9px, 1.2vw, 12px);
         font-weight: 800;
-        color: var(--dt-text);
         margin-top: 3px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    // sparkles around highlighted dials
+    &__sparks {
+        position: absolute;
+        inset: -18%;
+        border-radius: 50%;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 12% 34%, rgba(var(--spark), 0.95) 0 1.6px, transparent 2.4px),
+            radial-gradient(circle at 24% 12%, rgba(var(--spark), 0.8) 0 1.2px, transparent 2px),
+            radial-gradient(circle at 52% 3%, rgba(var(--spark), 0.9) 0 1.5px, transparent 2.3px),
+            radial-gradient(circle at 82% 16%, rgba(var(--spark), 0.8) 0 1.3px, transparent 2.1px),
+            radial-gradient(circle at 96% 48%, rgba(var(--spark), 0.95) 0 1.6px, transparent 2.4px),
+            radial-gradient(circle at 86% 82%, rgba(var(--spark), 0.8) 0 1.2px, transparent 2px),
+            radial-gradient(circle at 46% 98%, rgba(var(--spark), 0.9) 0 1.5px, transparent 2.3px),
+            radial-gradient(circle at 10% 74%, rgba(var(--spark), 0.8) 0 1.3px, transparent 2.1px);
+        animation: twh-spin 30s linear infinite;
+    }
+
+    // soft outer halo ring
+    &--hot::after,
+    &--cold::after,
+    &--current::after {
+        content: '';
+        position: absolute;
+        inset: -9%;
+        border-radius: 50%;
+        border: 2px solid rgba(var(--spark), 0.7);
+        box-shadow:
+            0 0 14px rgba(var(--spark), 0.6),
+            inset 0 0 12px rgba(var(--spark), 0.35);
+        pointer-events: none;
     }
 
     &--hot {
-        border-color: var(--dt-teal);
-        background: radial-gradient(
-            circle at 30% 25%,
-            rgba(var(--dt-teal-rgb), 0.55),
-            rgba(var(--dt-teal-rgb), 0.12) 65%
-        );
-        box-shadow:
-            inset 0 2px 0 rgba(255, 255, 255, 0.5),
-            inset 0 -10px 18px rgba(0, 0, 0, 0.25),
-            0 0 20px rgba(var(--dt-teal-rgb), 0.65);
+        --spark: var(--dt-teal-rgb);
+        --glow: rgba(var(--dt-teal-rgb), 0.55);
+        --bezel: linear-gradient(145deg, #ecfffc 0%, #74f2e1 28%, #0d8d85 56%, #8ef6e9 82%, #e8fffb 100%);
+        --face: radial-gradient(circle at 35% 25%, #3ee0cf 0%, #0d6d72 48%, #07303f 100%);
     }
 
     &--cold {
-        border-color: var(--dt-coral);
-        background: radial-gradient(
-            circle at 30% 25%,
-            rgba(var(--dt-coral-rgb), 0.55),
-            rgba(var(--dt-coral-rgb), 0.12) 65%
-        );
-        box-shadow:
-            inset 0 2px 0 rgba(255, 255, 255, 0.5),
-            inset 0 -10px 18px rgba(0, 0, 0, 0.25),
-            0 0 20px rgba(var(--dt-coral-rgb), 0.6);
+        --spark: var(--dt-coral-rgb);
+        --glow: rgba(var(--dt-coral-rgb), 0.5);
+        --bezel: linear-gradient(145deg, #fff0f3 0%, #ff9aab 28%, #b02a47 56%, #ffa6b6 82%, #fff0f3 100%);
+        --face: radial-gradient(circle at 35% 25%, #ff7d93 0%, #9b2a48 48%, #3a0f28 100%);
     }
 
     &--current {
         transform: scale(1.07);
     }
 
+    // golden pointer + gears under the latest digit
     &__pointer {
         position: absolute;
-        bottom: -16px;
+        bottom: -22%;
         left: 50%;
+        width: 22px;
+        height: 26px;
         transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 7px solid transparent;
-        border-right: 7px solid transparent;
-        border-bottom: 11px solid var(--dt-gold);
-        filter: drop-shadow(0 0 6px rgba(var(--dt-gold-rgb), 0.8));
+        filter: drop-shadow(0 0 8px rgba(var(--dt-gold-rgb), 0.8));
+        pointer-events: none;
+        z-index: 2;
+
+        svg {
+            display: block;
+        }
+    }
+
+    &__gear {
+        position: absolute;
+        color: var(--dt-gold);
+
+        &--a {
+            right: -16px;
+            bottom: -4px;
+        }
+
+        &--b {
+            right: -26px;
+            bottom: 6px;
+        }
     }
 }
 
-// ---- glass panels ----
+// ---- metal-framed panels ----
 .twh-panel {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        0 10px 28px rgba(0, 0, 0, 0.32);
-    border-radius: 16px;
-    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    border: 3px solid transparent;
+    border-radius: 20px;
+    background:
+        linear-gradient(#0b1531, #0b1531) padding-box,
+        linear-gradient(145deg, #f2f6ff 0%, #8a98bb 28%, #d9e1f2 52%, #6f7fa6 78%, #cdd7ee 100%) border-box;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
     min-width: 0;
 
     &__head {
@@ -327,23 +420,52 @@
         align-items: center;
         justify-content: space-between;
         gap: 8px;
-        padding-bottom: 10px;
-        margin-bottom: 12px;
-        border-bottom: 1px solid var(--dt-divider);
+        padding: 10px 12px;
+        background: linear-gradient(180deg, #dde4f3 0%, #a8b4d1 46%, #7886a9 52%, #aab6d3 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.75),
+            0 3px 8px rgba(0, 0, 0, 0.4);
     }
 
     &__title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
         margin: 0;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 900;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: var(--dt-text);
+        color: #fff;
+        text-shadow:
+            0 1px 2px rgba(10, 20, 60, 0.9),
+            0 0 1px rgba(10, 20, 60, 0.9);
+    }
+
+    &__icon {
+        color: #1c2a58;
+        filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
     }
 
     &__streak {
+        padding: 3px 9px;
         font-size: 12px;
         font-weight: 900;
+        background: rgba(8, 16, 48, 0.62);
+        border: 1px solid rgba(var(--tone-rgb), 0.85);
+        border-radius: 7px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    &__body {
+        flex: 1;
+        margin: 8px;
+        padding: 12px;
+        background: linear-gradient(180deg, #0a1230, #0d1a46);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.6);
     }
 
     &__bars {
@@ -364,7 +486,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 6px;
+        gap: 7px;
         padding-top: 12px;
         border-top: 1px solid var(--dt-divider);
     }
@@ -387,11 +509,10 @@
 
 .twh-panel__streak {
     color: var(--tone);
-    text-shadow: 0 0 10px rgba(var(--tone-rgb), 0.5);
 }
 
-// Percentage bars: glass track; the fill fades in from the left and grows
-// stronger as the percentage grows (--p is 0..1).
+// Percentage bars: recessed track; dotted fill that fades in from the left and
+// gets stronger as the percentage grows (--p is 0..1).
 .twh-bar {
     display: grid;
     grid-template-columns: 56px 1fr 52px;
@@ -407,42 +528,33 @@
     &__track {
         height: 14px;
         border-radius: 99px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: #081030;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow:
-            inset 0 2px 4px rgba(0, 0, 0, 0.35),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+            inset 0 2px 5px rgba(0, 0, 0, 0.7),
+            0 1px 0 rgba(255, 255, 255, 0.1);
         overflow: hidden;
-        backdrop-filter: blur(6px);
     }
 
     &__fill {
-        position: relative;
         height: 100%;
         border-radius: 99px;
-        background: linear-gradient(
-            90deg,
-            rgba(var(--tone-rgb), 0.06) 0%,
-            rgba(var(--tone-rgb), 0.55) 55%,
-            rgb(var(--tone-rgb)) 100%
-        );
+        background-image:
+            radial-gradient(rgba(255, 255, 255, 0.45) 0.8px, transparent 1.2px),
+            linear-gradient(
+                90deg,
+                rgba(var(--tone-rgb), 0.04) 0%,
+                rgba(var(--tone-rgb), 0.55) 55%,
+                rgb(var(--tone-rgb)) 100%
+            );
+        background-size:
+            4px 4px,
+            100% 100%;
         opacity: calc(0.55 + var(--p, 0) * 0.45);
         box-shadow: 0 0 calc(4px + var(--p, 0) * 14px) rgba(var(--tone-rgb), calc(0.2 + var(--p, 0) * 0.5));
         transition:
             width 0.35s ease,
             opacity 0.35s ease;
-
-        // glass sheen along the top edge
-        &::after {
-            content: '';
-            position: absolute;
-            top: 1px;
-            left: 6px;
-            right: 6px;
-            height: 35%;
-            border-radius: 99px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
-        }
     }
 
     &__pct {
@@ -454,31 +566,44 @@
     }
 }
 
+// glossy result beads
 .twh-chip {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 9px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     font-size: 12px;
     font-weight: 900;
-    color: var(--tone);
-    border: 1.5px solid var(--tone);
-    background: rgba(var(--tone-rgb), 0.18);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(var(--tone-rgb), 0.95);
+    background:
+        radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 38%),
+        radial-gradient(
+            circle at 50% 62%,
+            rgba(var(--tone-rgb), 0.85),
+            rgba(var(--tone-rgb), 0.35) 72%,
+            rgba(0, 0, 0, 0.45)
+        );
+    box-shadow:
+        0 3px 6px rgba(0, 0, 0, 0.5),
+        inset 0 -3px 5px rgba(0, 0, 0, 0.35);
 }
 
 .twh-chip-more {
-    height: 28px;
-    padding: 0 10px;
+    height: 30px;
+    padding: 0 12px;
     font-size: 12px;
     font-weight: 800;
     color: var(--dt-text);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    border-radius: 9px;
+    background: linear-gradient(180deg, #46527a 0%, #252f55 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 3px 6px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
     cursor: pointer;
 }
 
@@ -494,19 +619,27 @@
         font-size: 12px;
         font-weight: 900;
         color: var(--dt-text);
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.28);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        background: radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04) 60%);
+        border: 1px solid rgba(255, 255, 255, 0.38);
+        box-shadow:
+            inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+            0 2px 4px rgba(0, 0, 0, 0.35);
         cursor: pointer;
 
         &.is-active {
             color: #1a1300;
-            background: var(--dt-gold);
-            border-color: var(--dt-gold);
+            background: radial-gradient(circle at 35% 26%, #fff3c4, #ffc83d 60%, #c98f0b);
+            border-color: #ffe08a;
             box-shadow:
-                0 0 12px rgba(var(--dt-gold-rgb), 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+                0 0 14px rgba(var(--dt-gold-rgb), 0.65),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.25);
         }
+    }
+}
+
+@keyframes twh-spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
@@ -521,12 +654,16 @@
         gap: 8px;
     }
 
+    .twh-panel__title {
+        font-size: 13px;
+    }
+
     .twh-picker {
-        gap: 4px;
+        gap: 3px;
 
         &__btn {
-            width: 24px;
-            height: 24px;
+            width: 23px;
+            height: 23px;
             font-size: 11px;
         }
     }
@@ -538,7 +675,8 @@
 
         &__rings {
             grid-template-columns: repeat(5, minmax(0, 1fr));
-            row-gap: 22px;
+            gap: 12px;
+            row-gap: 40px;
         }
 
         &__grid {
@@ -549,7 +687,12 @@
 
 @media (prefers-reduced-motion: reduce) {
     .twh-ring,
-    .twh-bar__fill {
+    .twh-bar__fill,
+    .twh-disclaimer-btn__chevron {
         transition: none;
+    }
+
+    .twh-ring__sparks {
+        animation: none;
     }
 }

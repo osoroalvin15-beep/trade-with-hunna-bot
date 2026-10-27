@@ -31,6 +31,59 @@ const CHIPS_EXPANDED = 40;
 
 type TTone = 'a' | 'b' | 'c';
 
+const buildGear = (teeth: number, outer: number, inner: number) => {
+    const pts: string[] = [];
+    const steps = teeth * 4;
+    for (let i = 0; i < steps; i += 1) {
+        const angle = (i / steps) * Math.PI * 2 - Math.PI / 2;
+        const r = i % 4 === 1 || i % 4 === 2 ? outer : inner;
+        pts.push(`${(12 + Math.cos(angle) * r).toFixed(2)},${(12 + Math.sin(angle) * r).toFixed(2)}`);
+    }
+    return `M${pts.join('L')}Z`;
+};
+const GEAR_PATH = buildGear(8, 10.5, 8);
+
+const GearIcon = ({ size = 14, className }: { size?: number; className?: string }) => (
+    <svg className={className} width={size} height={size} viewBox='0 0 24 24' aria-hidden='true'>
+        <path d={GEAR_PATH} fill='currentColor' />
+        <circle cx='12' cy='12' r='3.4' fill='#0b1531' />
+    </svg>
+);
+
+type TPanelIcon = 'chart' | 'grid' | 'stack' | 'trend';
+
+const PanelIcon = ({ kind }: { kind: TPanelIcon }) => (
+    <svg
+        className='twh-panel__icon'
+        width='20'
+        height='20'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        aria-hidden='true'
+    >
+        {kind === 'chart' && <path d='M3 20h18M6 16v-5M11 16V6M16 16v-8M21 16v-3' />}
+        {kind === 'grid' && (
+            <>
+                <rect x='4' y='4' width='6' height='6' rx='1' />
+                <rect x='14' y='4' width='6' height='6' rx='1' />
+                <rect x='4' y='14' width='6' height='6' rx='1' />
+                <rect x='14' y='14' width='6' height='6' rx='1' />
+            </>
+        )}
+        {kind === 'stack' && (
+            <>
+                <ellipse cx='12' cy='6' rx='8' ry='3' />
+                <path d='M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6' />
+            </>
+        )}
+        {kind === 'trend' && <path d='M3 17l6-6 4 4 8-9M15 6h6v6' />}
+    </svg>
+);
+
 const DigitRing = ({
     digit,
     percent,
@@ -53,10 +106,24 @@ const DigitRing = ({
         ]
             .filter(Boolean)
             .join(' ')}
+        // Decorative dial arc: a full circle stands for 20% of the ticks.
+        style={{ '--arc': `${Math.min(percent * 5, 100)}%` } as CSSProperties}
     >
-        <span className='twh-ring__digit'>{digit}</span>
-        <span className='twh-ring__pct'>{percent.toFixed(1)}%</span>
-        {isCurrent && <span className='twh-ring__pointer' aria-label='Latest digit' />}
+        {(isHot || isCold || isCurrent) && <span className='twh-ring__sparks' aria-hidden='true' />}
+        <span className='twh-ring__face'>
+            <span className='twh-ring__arc' aria-hidden='true' />
+            <span className='twh-ring__digit'>{digit}</span>
+            <span className='twh-ring__pct'>{percent.toFixed(1)}%</span>
+        </span>
+        {isCurrent && (
+            <span className='twh-ring__pointer' role='img' aria-label='Latest digit'>
+                <svg width='22' height='26' viewBox='0 0 22 26' aria-hidden='true'>
+                    <path d='M11 1l9 17H2z' fill='#ffc83d' stroke='#fff3c4' strokeWidth='1' />
+                </svg>
+                <GearIcon size={13} className='twh-ring__gear twh-ring__gear--a' />
+                <GearIcon size={10} className='twh-ring__gear twh-ring__gear--b' />
+            </span>
+        )}
     </div>
 );
 
@@ -80,6 +147,7 @@ type TSide = { label: string; pct: number; tone: TTone };
 
 const OutcomePanel = ({
     title,
+    icon,
     sides,
     outcomes,
     toneFor,
@@ -88,6 +156,7 @@ const OutcomePanel = ({
     children,
 }: {
     title: string;
+    icon: TPanelIcon;
     sides: [TSide, TSide];
     outcomes: string[];
     toneFor: (letter: string) => TTone;
@@ -102,7 +171,10 @@ const OutcomePanel = ({
     return (
         <section className='twh-panel'>
             <header className='twh-panel__head'>
-                <h3 className='twh-panel__title'>{title}</h3>
+                <h3 className='twh-panel__title'>
+                    {title}
+                    <PanelIcon kind={icon} />
+                </h3>
                 {streak.letter && (
                     <span className={`twh-panel__streak twh-tone-${toneFor(streak.letter)}`}>
                         {streak.length}x {labelFor(streak.letter)}
@@ -110,42 +182,44 @@ const OutcomePanel = ({
                 )}
             </header>
 
-            {children}
+            <div className='twh-panel__body'>
+                {children}
 
-            <div className='twh-panel__bars'>
-                {sides.map(side => (
-                    <div key={side.label} className={`twh-bar twh-tone-${side.tone}`}>
-                        <span className='twh-bar__label'>{side.label}</span>
-                        <div className='twh-bar__track'>
-                            <div
-                                className='twh-bar__fill'
-                                style={
-                                    {
-                                        width: `${Math.min(side.pct, 100)}%`,
-                                        '--p': Math.min(side.pct, 100) / 100,
-                                    } as CSSProperties
-                                }
-                            />
+                <div className='twh-panel__bars'>
+                    {sides.map(side => (
+                        <div key={side.label} className={`twh-bar twh-tone-${side.tone}`}>
+                            <span className='twh-bar__label'>{side.label}</span>
+                            <div className='twh-bar__track'>
+                                <div
+                                    className='twh-bar__fill'
+                                    style={
+                                        {
+                                            width: `${Math.min(side.pct, 100)}%`,
+                                            '--p': Math.min(side.pct, 100) / 100,
+                                        } as CSSProperties
+                                    }
+                                />
+                            </div>
+                            <span className='twh-bar__pct'>{side.pct.toFixed(1)}%</span>
                         </div>
-                        <span className='twh-bar__pct'>{side.pct.toFixed(1)}%</span>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
 
-            {footnote && <div className='twh-panel__footnote'>{footnote}</div>}
+                {footnote && <div className='twh-panel__footnote'>{footnote}</div>}
 
-            <div className='twh-panel__chips'>
-                {visible.map((letter, i) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <span key={i} className={`twh-chip twh-tone-${toneFor(letter)}`}>
-                        {letter}
-                    </span>
-                ))}
-                {outcomes.length > CHIPS_COLLAPSED && (
-                    <button type='button' className='twh-chip-more' onClick={() => setExpanded(v => !v)}>
-                        {expanded ? '− Less' : '+ More'}
-                    </button>
-                )}
+                <div className='twh-panel__chips'>
+                    {visible.map((letter, i) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <span key={i} className={`twh-chip twh-tone-${toneFor(letter)}`}>
+                            {letter}
+                        </span>
+                    ))}
+                    {outcomes.length > CHIPS_COLLAPSED && (
+                        <button type='button' className='twh-chip-more' onClick={() => setExpanded(v => !v)}>
+                            {expanded ? '− Less' : '+ More'}
+                        </button>
+                    )}
+                </div>
             </div>
         </section>
     );
@@ -241,12 +315,15 @@ const DigitTools = () => {
             <div className='twh-digit-tools__legend'>
                 <span className='twh-legend twh-legend--hot'>Most frequent</span>
                 <span className='twh-legend twh-legend--cold'>Least frequent</span>
-                <span className='twh-legend twh-legend--current'>Latest digit</span>
+                <span className='twh-legend twh-legend--current'>
+                    <GearIcon size={16} className='twh-legend__gear' /> Latest digit
+                </span>
             </div>
 
             <div className='twh-digit-tools__grid'>
                 <OutcomePanel
                     title='Over / Under'
+                    icon='chart'
                     sides={[
                         { label: 'Over', pct: stats.overPct, tone: 'a' },
                         { label: 'Under', pct: stats.underPct, tone: 'b' },
@@ -261,6 +338,7 @@ const DigitTools = () => {
 
                 <OutcomePanel
                     title='Match / Differ'
+                    icon='grid'
                     sides={[
                         { label: 'Match', pct: stats.matchPct, tone: 'a' },
                         { label: 'Differ', pct: stats.differPct, tone: 'b' },
@@ -274,6 +352,7 @@ const DigitTools = () => {
 
                 <OutcomePanel
                     title='Even / Odd'
+                    icon='stack'
                     sides={[
                         { label: 'Even', pct: stats.evenPct, tone: 'a' },
                         { label: 'Odd', pct: stats.oddPct, tone: 'b' },
@@ -285,6 +364,7 @@ const DigitTools = () => {
 
                 <OutcomePanel
                     title='Rise / Fall'
+                    icon='trend'
                     sides={[
                         { label: 'Rise', pct: stats.risePct, tone: 'a' },
                         { label: 'Fall', pct: stats.fallPct, tone: 'b' },
@@ -303,7 +383,10 @@ const DigitTools = () => {
                     aria-expanded={showDisclaimer}
                     aria-controls='twh-risk-disclaimer'
                 >
-                    <span aria-hidden='true'>&#9888;</span> Risk disclaimer
+                    <span className='twh-disclaimer-btn__label'>
+                        <span aria-hidden='true'>&#9888;</span> Risk disclaimer
+                    </span>
+                    <span className='twh-disclaimer-btn__chevron' aria-hidden='true' />
                 </button>
                 {showDisclaimer && (
                     <div id='twh-risk-disclaimer' className='twh-disclaimer-text' role='region'>
