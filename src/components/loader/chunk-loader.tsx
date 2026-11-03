@@ -41,7 +41,7 @@ export default function ChunkLoader({ message }: { message: string }) {
                 <hr className='brand-loader__rule' />
 
                 <h1 className='brand-loader__welcome'>Welcome to EA TRADERS</h1>
-                <p className='brand-loader__tagline'>Empowering your financial journey.</p>
+                <p className='brand-loader__tagline'>Transparent trading intelligence platform.</p>
 
                 <div className='brand-loader__progress-track'>
                     <div className='brand-loader__progress-fill' />
