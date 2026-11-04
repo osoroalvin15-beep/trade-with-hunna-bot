@@ -1,0 +1,399 @@
+// Performance and Risk Tools tabs: flat dark panels, same look as the Analysis Tool.
+.twi {
+    --i-bg: linear-gradient(165deg, #070e2b 0%, #0b1a55 60%, #081038 100%);
+    --i-card: #0f1f63;
+    --i-border: #2c46a6;
+    --i-line: rgba(255, 255, 255, 0.16);
+    --i-text: #f4f7ff;
+    --i-dim: #b4c1e6;
+    --i-up: #2ee59d;
+    --i-down: #ff5470;
+    --i-warn: #ffb02e;
+    --i-blue: #3d7bff;
+
+    max-width: 1180px;
+    margin: 16px auto;
+    padding: 20px;
+    color: var(--i-text);
+    font-weight: 600;
+    background: var(--i-bg);
+    border: 1px solid var(--i-border);
+    border-radius: 18px;
+    text-align: left;
+
+    &__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+        padding-bottom: 14px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid var(--i-line);
+    }
+
+    &__title {
+        margin: 0 0 2px;
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--i-text);
+    }
+
+    .up {
+        color: var(--i-up);
+    }
+
+    .down {
+        color: var(--i-down);
+    }
+
+    .warn {
+        color: var(--i-warn);
+    }
+}
+
+.twi-muted,
+.twi-hint {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--i-dim);
+}
+
+.twi-hint {
+    margin-top: 8px;
+}
+
+.twi-note,
+.twi-error {
+    padding: 12px 14px;
+    margin: 0 0 14px;
+    font-size: 14px;
+    border-radius: 12px;
+    background: rgba(61, 123, 255, 0.14);
+    border: 1px solid var(--i-blue);
+}
+
+.twi-error {
+    background: rgba(255, 84, 112, 0.14);
+    border-color: var(--i-down);
+    color: #ffc2cd;
+}
+
+.twi-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    button {
+        padding: 7px 14px;
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--i-text);
+        background: transparent;
+        border: 1px solid var(--i-border);
+        border-radius: 99px;
+        cursor: pointer;
+
+        &.is-on {
+            background: var(--i-blue);
+            border-color: var(--i-blue);
+        }
+    }
+}
+
+.twi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.twi-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px;
+    background: var(--i-card);
+    border: 1px solid var(--i-border);
+    border-radius: 14px;
+
+    &__label {
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--i-dim);
+    }
+
+    &__value {
+        font-size: 22px;
+        font-weight: 900;
+        line-height: 1.15;
+    }
+
+    &__hint {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--i-dim);
+    }
+}
+
+.twi-card {
+    padding: 16px;
+    margin-bottom: 14px;
+    background: var(--i-card);
+    border: 1px solid var(--i-border);
+    border-radius: 14px;
+
+    &__title {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 900;
+        color: var(--i-text);
+    }
+}
+
+.twi-two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.twi-row2,
+.twi-row3 {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.twi-row3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.twi-field {
+    display: block;
+    margin: 12px 0 0;
+
+    > span:first-child {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--i-dim);
+    }
+
+    &__box {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 10px;
+        background: #081030;
+        border: 1px solid var(--i-border);
+        border-radius: 10px;
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 9px 0;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--i-text);
+            background: transparent;
+            border: 0;
+            outline: 0;
+        }
+
+        em {
+            font-size: 12px;
+            font-style: normal;
+            color: var(--i-dim);
+        }
+
+        &:focus-within {
+            border-color: var(--i-blue);
+        }
+    }
+}
+
+.twi-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 0 0;
+    margin-top: 10px;
+    border-top: 1px solid var(--i-line);
+    font-size: 13px;
+    color: var(--i-dim);
+
+    b {
+        font-size: 17px;
+        font-weight: 900;
+        color: var(--i-text);
+
+        &.up {
+            color: var(--i-up);
+        }
+
+        &.down {
+            color: var(--i-down);
+        }
+
+        &.warn {
+            color: var(--i-warn);
+        }
+    }
+}
+
+.twi-meter {
+    height: 12px;
+    margin-top: 12px;
+    overflow: hidden;
+    background: #081030;
+    border: 1px solid var(--i-border);
+    border-radius: 99px;
+
+    &__fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.3s ease;
+
+        &.up {
+            background: var(--i-up);
+        }
+
+        &.warn {
+            background: var(--i-warn);
+        }
+
+        &.down {
+            background: var(--i-down);
+        }
+    }
+}
+
+.twi-table {
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+
+    &__row {
+        display: grid;
+        grid-template-columns: 2fr 0.8fr 0.9fr 1.3fr;
+        gap: 8px;
+        padding: 9px 0;
+        font-size: 13px;
+        border-top: 1px solid var(--i-line);
+
+        &.three {
+            grid-template-columns: 0.8fr 1fr 2.2fr;
+        }
+
+        &--head {
+            border-top: 0;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--i-dim);
+        }
+
+        &.bad {
+            color: #ffc2cd;
+            background: rgba(255, 84, 112, 0.12);
+        }
+    }
+}
+
+.twi-bars {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    height: 190px;
+    margin-top: 12px;
+    overflow-x: auto;
+
+    &__col {
+        flex: 1 0 44px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        gap: 4px;
+    }
+
+    &__value {
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    &__track {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        width: 100%;
+    }
+
+    &__bar {
+        width: 100%;
+        border-radius: 6px 6px 0 0;
+
+        &.up {
+            background: var(--i-up);
+        }
+
+        &.down {
+            background: var(--i-down);
+        }
+    }
+
+    &__day {
+        font-size: 11px;
+        color: var(--i-dim);
+    }
+}
+
+.twi-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--i-dim);
+}
+
+.twi-btn {
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--i-text);
+    background: var(--i-blue);
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: 0.6;
+    }
+}
+
+@media (max-width: 820px) {
+    .twi {
+        padding: 14px;
+        margin: 8px;
+    }
+
+    .twi-two,
+    .twi-row3 {
+        grid-template-columns: 1fr;
+    }
+
+    .twi-table__row {
+        grid-template-columns: 1.6fr 0.7fr 0.8fr 1.2fr;
+        font-size: 12px;
+    }
+
+    .twi-table__row.three {
+        grid-template-columns: 0.7fr 1fr 2fr;
+    }
+}

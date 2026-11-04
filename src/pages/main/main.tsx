@@ -31,9 +31,11 @@ import {
 } from '@/utils/trade-type-modal-handler';
 import {
     LabelPairedChartLineCaptionRegularIcon,
+    LabelPairedChartMixedCaptionRegularIcon,
     LabelPairedGaugeMaxCaptionRegularIcon,
     LabelPairedObjectsColumnCaptionRegularIcon,
     LabelPairedPuzzlePieceTwoCaptionBoldIcon,
+    LabelPairedShieldCheckCaptionRegularIcon,
 } from '@deriv/quill-icons/LabelPaired';
 import { LegacyGuide1pxIcon } from '@deriv/quill-icons/Legacy';
 import { Localize, localize } from '@deriv-com/translations';
@@ -48,6 +50,8 @@ const ChartWrapper = lazy(() => import('../chart/chart-wrapper'));
 const Tutorial = lazy(() => import('../tutorials'));
 const DCircles = lazy(() => import('../d-circles'));
 const FreeBots = lazy(() => import('../free-bots'));
+const Performance = lazy(() => import('../insights/performance'));
+const RiskTools = lazy(() => import('../insights/risk-tools'));
 
 const AppWrapper = observer(() => {
     const { connectionStatus } = useApiBase();
@@ -80,7 +84,17 @@ const AppWrapper = observer(() => {
     const { clear } = summary_card;
     const { DASHBOARD, BOT_BUILDER } = DBOT_TABS;
     const init_render = React.useRef(true);
-    const hash = ['dashboard', 'bot_builder', 'chart', 'free_bots', 'd_circles', 'tutorial'];
+    const hash = [
+        'dashboard',
+        'bot_builder',
+        'chart',
+        'free_bots',
+        'd_circles',
+        'performance',
+        'risk_tools',
+        'copy_trading',
+        'tutorial',
+    ];
     const { isDesktop } = useDevice();
     const location = useLocation();
     const navigate = useNavigate();
@@ -457,6 +471,40 @@ const AppWrapper = observer(() => {
                             >
                                 <Suspense fallback={<ChunkLoader message={localize('Loading...')} />}>
                                     <DCircles />
+                                </Suspense>
+                            </div>
+                            <div
+                                label={
+                                    <>
+                                        <LabelPairedChartMixedCaptionRegularIcon
+                                            height='24px'
+                                            width='24px'
+                                            fill='var(--text-general)'
+                                        />
+                                        <Localize i18n_default_text='Performance' />
+                                    </>
+                                }
+                                id='id-performance'
+                            >
+                                <Suspense fallback={<ChunkLoader message={localize('Loading...')} />}>
+                                    <Performance />
+                                </Suspense>
+                            </div>
+                            <div
+                                label={
+                                    <>
+                                        <LabelPairedShieldCheckCaptionRegularIcon
+                                            height='24px'
+                                            width='24px'
+                                            fill='var(--text-general)'
+                                        />
+                                        <Localize i18n_default_text='Risk Tools' />
+                                    </>
+                                }
+                                id='id-risk-tools'
+                            >
+                                <Suspense fallback={<ChunkLoader message={localize('Loading...')} />}>
+                                    <RiskTools />
                                 </Suspense>
                             </div>
                             <div
