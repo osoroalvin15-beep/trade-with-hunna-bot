@@ -59,6 +59,9 @@ const Plans = () => {
             {billingReady && !isAuthorized && (
                 <p className='twi-note'>Log in with your Deriv account to choose a plan.</p>
             )}
+            {billingReady && isAuthorized && !paymentReady && (
+                <p className='twi-note'>Payments open soon. You can see what each plan includes below.</p>
+            )}
             {pending && (
                 <p className='twi-note'>
                     We received your payment request and are checking it. Your plan turns on once we confirm the
