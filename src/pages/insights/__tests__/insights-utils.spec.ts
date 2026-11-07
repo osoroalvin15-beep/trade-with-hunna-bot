@@ -1,5 +1,6 @@
 import {
     breakevenWinRate,
+    byHour,
     dailyLimit,
     dailyNet,
     expectedValue,
@@ -14,6 +15,7 @@ import {
     summarize,
     toTrades,
     tradeKind,
+    tradesToCsv,
     TTrade,
 } from '../insights-utils';
 
@@ -143,5 +145,44 @@ describe('risk calculators', () => {
         expect(expectedValue(1, 1.95, 60)).toBeCloseTo(0.17, 2);
         expect(rewardToRisk(1, 1.95)).toBeCloseTo(0.95);
         expect(breakevenWinRate(1, 0)).toBe(0);
+    });
+});
+
+describe('hour table and CSV', () => {
+    it('groups trades by local hour, earliest first', () => {
+        const at = (h: number) => new Date(2026, 9, 5, h, 10).getTime() / 1000;
+        const rows = byHour([t(1, 1, at(14)), t(2, -1, at(9)), t(3, 1, at(14))]);
+        expect(rows.map(r => r.key)).toEqual(['09:00', '14:00']);
+        expect(rows[1]).toMatchObject({ trades: 2, wins: 2 });
+    });
+
+    it('writes a CSV with a header, newest first, and escapes commas', () => {
+        const csv = tradesToCsv([t(1, 1, 100, 'R_100', 'DIGITEVEN'), t(2, -1, 200, 'R_100', 'DIGITODD')]).split('\n');
+        expect(csv[0]).toBe('time,market,trade_type,stake,payout,profit');
+        expect(csv[1]).toContain('DIGITODD');
+        expect(csv[2]).toContain('DIGITEVEN');
+        expect(csv[1]).toContain('Volatility 100 Index');
+    });
+
+    it('treats the 2000-trade range like "no start date"', () => {
+        expect(rangeStart('max')).toBeUndefined();
+    });
+});
+
+describe('hour table and CSV', () => {
+    it('groups trades by the hour they closed, earliest first', () => {
+        const at = (h: number, i: number) => t(i, i % 2 ? -1 : 1, new Date(2026, 9, 5, h, 10).getTime() / 1000);
+        const rows = byHour([at(15, 1), at(9, 2), at(9, 3)]);
+        expect(rows.map(r => r.key)).toEqual(['09:00', '15:00']);
+        expect(rows[0].trades).toBe(2);
+    });
+
+    it('writes a CSV with a header and safe cells', () => {
+        const csv = tradesToCsv([t(1, 1, 1000, 'R_100', 'DIGITEVEN'), t(2, -1, 2000, 'R_10', 'CALL')]);
+        const lines = csv.split('\n');
+        expect(lines[0]).toBe('time,market,trade_type,stake,payout,profit');
+        expect(lines).toHaveLength(3);
+        expect(lines[1]).toContain('Volatility 10 Index'); // newest first
+        expect(rangeStart('max')).toBeUndefined();
     });
 });

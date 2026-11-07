@@ -32,6 +32,8 @@ import {
 import {
     LabelPairedChartLineCaptionRegularIcon,
     LabelPairedChartMixedCaptionRegularIcon,
+    LabelPairedCircleStarCaptionRegularIcon,
+    LabelPairedEyeCaptionRegularIcon,
     LabelPairedGaugeMaxCaptionRegularIcon,
     LabelPairedObjectsColumnCaptionRegularIcon,
     LabelPairedPuzzlePieceTwoCaptionBoldIcon,
@@ -52,6 +54,8 @@ const DCircles = lazy(() => import('../d-circles'));
 const FreeBots = lazy(() => import('../free-bots'));
 const Performance = lazy(() => import('../insights/performance'));
 const RiskTools = lazy(() => import('../insights/risk-tools'));
+const Transparency = lazy(() => import('../insights/transparency'));
+const Plans = lazy(() => import('../insights/plans'));
 
 const AppWrapper = observer(() => {
     const { connectionStatus } = useApiBase();
@@ -92,6 +96,8 @@ const AppWrapper = observer(() => {
         'd_circles',
         'performance',
         'risk_tools',
+        'transparency',
+        'plans',
         'copy_trading',
         'tutorial',
     ];
@@ -505,6 +511,40 @@ const AppWrapper = observer(() => {
                             >
                                 <Suspense fallback={<ChunkLoader message={localize('Loading...')} />}>
                                     <RiskTools />
+                                </Suspense>
+                            </div>
+                            <div
+                                label={
+                                    <>
+                                        <LabelPairedEyeCaptionRegularIcon
+                                            height='24px'
+                                            width='24px'
+                                            fill='var(--text-general)'
+                                        />
+                                        <Localize i18n_default_text='Transparency' />
+                                    </>
+                                }
+                                id='id-transparency'
+                            >
+                                <Suspense fallback={<ChunkLoader message={localize('Loading...')} />}>
+                                    <Transparency />
+                                </Suspense>
+                            </div>
+                            <div
+                                label={
+                                    <>
+                                        <LabelPairedCircleStarCaptionRegularIcon
+                                            height='24px'
+                                            width='24px'
+                                            fill='var(--text-general)'
+                                        />
+                                        <Localize i18n_default_text='Plans' />
+                                    </>
+                                }
+                                id='id-plans'
+                            >
+                                <Suspense fallback={<ChunkLoader message={localize('Loading...')} />}>
+                                    <Plans />
                                 </Suspense>
                             </div>
                             <div

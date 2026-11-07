@@ -1,13 +1,26 @@
 import { useMemo, useState } from 'react';
-import { dailyNet, groupBy, marketName, summarize, tradeKind, TGroupRow, TRange } from './insights-utils';
+import {
+    byHour,
+    dailyNet,
+    groupBy,
+    marketName,
+    summarize,
+    tradeKind,
+    tradesToCsv,
+    TGroupRow,
+    TRange,
+} from './insights-utils';
+import { canUse, planName, requiredPlan, TFeature } from './plans-config';
+import { usePlan, useGoToPlans } from './use-plan';
 import { useProfitTable } from './use-profit-table';
 import './insights.scss';
 
-const RANGES: { id: TRange; label: string }[] = [
-    { id: 'today', label: 'Today' },
-    { id: '7d', label: '7 days' },
-    { id: '30d', label: '30 days' },
-    { id: 'all', label: 'Latest 500' },
+const RANGES: { id: TRange; label: string; feature: TFeature | null }[] = [
+    { id: 'today', label: 'Today', feature: null },
+    { id: '7d', label: '7 days', feature: null },
+    { id: '30d', label: '30 days', feature: 'range_30d' },
+    { id: 'all', label: 'Latest 500', feature: 'range_500' },
+    { id: 'max', label: 'Latest 2000', feature: 'range_2000' },
 ];
 
 const money = (n: number, cur: string) => `${n > 0 ? '+' : n < 0 ? '-' : ''}${Math.abs(n).toFixed(2)} ${cur}`;
@@ -19,6 +32,16 @@ const Stat = ({ label, value, hint, kind = '' }: { label: string; value: string;
         <span className={`twi-stat__value ${kind}`}>{value}</span>
         <span className='twi-stat__hint'>{hint}</span>
     </div>
+);
+
+const Locked = ({ title, feature, goToPlans }: { title: string; feature: TFeature; goToPlans: () => void }) => (
+    <section className='twi-card twi-locked'>
+        <h3 className='twi-card__title'>{title}</h3>
+        <p className='twi-muted'>This part is on the {planName(requiredPlan(feature))} plan and above.</p>
+        <button type='button' className='twi-btn' onClick={goToPlans}>
+            See plans
+        </button>
+    </section>
 );
 
 const Table = ({
@@ -57,16 +80,39 @@ const Table = ({
     </section>
 );
 
+const download = (text: string, name: string) => {
+    const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
 const Performance = () => {
+    const { plan } = usePlan();
+    const goToPlans = useGoToPlans();
     const [range, setRange] = useState<TRange>('7d');
+    const [lockedFor, setLockedFor] = useState<TFeature | null>(null);
+    const can = (f: TFeature) => canUse(plan, f);
     const { trades, loading, error, updated, reload, isAuthorized, loginid, currency, isVirtual } =
         useProfitTable(range);
 
     const s = useMemo(() => summarize(trades), [trades]);
     const byMarket = useMemo(() => groupBy(trades, t => t.symbol), [trades]);
     const byKind = useMemo(() => groupBy(trades, t => tradeKind(t.type)), [trades]);
+    const hours = useMemo(() => byHour(trades), [trades]);
     const days = useMemo(() => dailyNet(trades).slice(-14), [trades]);
     const maxDay = Math.max(1, ...days.map(d => Math.abs(d.net)));
+
+    const pick = (r: (typeof RANGES)[number]) => {
+        if (r.feature && !can(r.feature)) {
+            setLockedFor(r.feature);
+            return;
+        }
+        setLockedFor(null);
+        setRange(r.id);
+    };
 
     return (
         <div className='twi'>
@@ -80,20 +126,32 @@ const Performance = () => {
                     </p>
                 </div>
                 <div className='twi-pills' role='group' aria-label='Time period'>
-                    {RANGES.map(r => (
-                        <button
-                            key={r.id}
-                            type='button'
-                            className={range === r.id ? 'is-on' : ''}
-                            aria-pressed={range === r.id}
-                            onClick={() => setRange(r.id)}
-                        >
-                            {r.label}
-                        </button>
-                    ))}
+                    {RANGES.map(r => {
+                        const locked = Boolean(r.feature && !can(r.feature));
+                        return (
+                            <button
+                                key={r.id}
+                                type='button'
+                                className={`${range === r.id ? 'is-on' : ''} ${locked ? 'is-locked' : ''}`}
+                                aria-pressed={range === r.id}
+                                onClick={() => pick(r)}
+                            >
+                                {r.label}
+                                {locked && <span className='twi-pills__lock'> (locked)</span>}
+                            </button>
+                        );
+                    })}
                 </div>
             </header>
 
+            {lockedFor && (
+                <p className='twi-note'>
+                    That period is on the {planName(requiredPlan(lockedFor))} plan and above.{' '}
+                    <button type='button' className='twi-link' onClick={goToPlans}>
+                        See plans
+                    </button>
+                </p>
+            )}
             {!isAuthorized && (
                 <p className='twi-note'>
                     Log in with your Deriv account and your closed trades will show up here. Only you can see them.
@@ -157,49 +215,81 @@ const Performance = () => {
                         />
                     </div>
 
-                    <section className='twi-card'>
-                        <h3 className='twi-card__title'>Result by day</h3>
-                        <div className='twi-bars' role='img' aria-label='Profit or loss for each recent day'>
-                            {days.map(d => (
-                                <div
-                                    className='twi-bars__col'
-                                    key={d.day}
-                                    title={`${d.day}: ${money(d.net, currency)}`}
-                                >
-                                    <span className={`twi-bars__value ${tone(d.net)}`}>
-                                        {d.net > 0 ? '+' : ''}
-                                        {d.net.toFixed(1)}
-                                    </span>
-                                    <div className='twi-bars__track'>
-                                        <div
-                                            className={`twi-bars__bar ${d.net >= 0 ? 'up' : 'down'}`}
-                                            style={{ height: `${Math.max(6, (Math.abs(d.net) / maxDay) * 100)}%` }}
-                                        />
+                    {can('daily_chart') ? (
+                        <section className='twi-card'>
+                            <h3 className='twi-card__title'>Result by day</h3>
+                            <div className='twi-bars' role='img' aria-label='Profit or loss for each recent day'>
+                                {days.map(d => (
+                                    <div
+                                        className='twi-bars__col'
+                                        key={d.day}
+                                        title={`${d.day}: ${money(d.net, currency)}`}
+                                    >
+                                        <span className={`twi-bars__value ${tone(d.net)}`}>
+                                            {d.net > 0 ? '+' : ''}
+                                            {d.net.toFixed(1)}
+                                        </span>
+                                        <div className='twi-bars__track'>
+                                            <div
+                                                className={`twi-bars__bar ${d.net >= 0 ? 'up' : 'down'}`}
+                                                style={{ height: `${Math.max(6, (Math.abs(d.net) / maxDay) * 100)}%` }}
+                                            />
+                                        </div>
+                                        <span className='twi-bars__day'>{d.day.slice(5).replace('-', '/')}</span>
                                     </div>
-                                    <span className='twi-bars__day'>{d.day.slice(5).replace('-', '/')}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
+                                ))}
+                            </div>
+                        </section>
+                    ) : (
+                        <Locked title='Result by day' feature='daily_chart' goToPlans={goToPlans} />
+                    )}
 
-                    <div className='twi-two'>
-                        <Table title='Results by market' rows={byMarket} name={marketName} currency={currency} />
-                        <Table title='Results by trade type' rows={byKind} name={k => k} currency={currency} />
-                    </div>
+                    {can('breakdowns') ? (
+                        <div className='twi-two'>
+                            <Table title='Results by market' rows={byMarket} name={marketName} currency={currency} />
+                            <Table title='Results by trade type' rows={byKind} name={k => k} currency={currency} />
+                        </div>
+                    ) : (
+                        <Locked title='Results by market and trade type' feature='breakdowns' goToPlans={goToPlans} />
+                    )}
+
+                    {can('hour_table') ? (
+                        <Table
+                            title='Results by time of day (your local time)'
+                            rows={hours}
+                            name={k => k}
+                            currency={currency}
+                        />
+                    ) : (
+                        <Locked title='Results by time of day' feature='hour_table' goToPlans={goToPlans} />
+                    )}
                 </>
             )}
 
             <footer className='twi-foot'>
                 <span>
-                    Based on your latest 500 closed trades in this period
+                    Based on your closed trades in this period
                     {updated ? `, updated ${new Date(updated).toLocaleTimeString()}` : ''}. These figures describe the
                     past only and do not predict future results.
                 </span>
-                {isAuthorized && (
-                    <button type='button' className='twi-btn' onClick={reload} disabled={loading}>
-                        Refresh
-                    </button>
-                )}
+                <span className='twi-foot__actions'>
+                    {isAuthorized && trades.length > 0 && (
+                        <button
+                            type='button'
+                            className='twi-btn twi-btn--ghost'
+                            onClick={() =>
+                                can('csv') ? download(tradesToCsv(trades), `trades-${range}.csv`) : goToPlans()
+                            }
+                        >
+                            {can('csv') ? 'Download CSV' : 'Download CSV (Professional)'}
+                        </button>
+                    )}
+                    {isAuthorized && (
+                        <button type='button' className='twi-btn' onClick={reload} disabled={loading}>
+                            Refresh
+                        </button>
+                    )}
+                </span>
             </footer>
         </div>
     );

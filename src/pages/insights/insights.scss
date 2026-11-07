@@ -397,3 +397,353 @@
         grid-template-columns: 0.7fr 1fr 2fr;
     }
 }
+
+.twi-pills button.is-locked {
+    opacity: 0.65;
+    border-style: dashed;
+
+    small {
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--i-warn);
+    }
+}
+
+.twi-locked {
+    border-style: dashed;
+}
+
+.twi-row4 {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    select {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 0;
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--i-text);
+        background: transparent;
+        border: 0;
+        outline: 0;
+
+        option {
+            color: #111;
+        }
+    }
+}
+
+.twi-table__row.five {
+    grid-template-columns: 1.4fr 0.7fr 1fr 1fr 1fr;
+}
+
+.twi-list {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+
+    li {
+        margin-bottom: 6px;
+    }
+
+    b {
+        color: var(--i-text);
+    }
+}
+
+.twi-steps {
+    margin-bottom: 4px;
+}
+
+.twi-faq {
+    padding: 10px 0;
+    border-top: 1px solid var(--i-line);
+
+    summary {
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    p {
+        margin: 8px 0 0;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--i-dim);
+    }
+}
+
+.twi-plans {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.twi-plan {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px;
+    background: var(--i-card);
+    border: 1px solid var(--i-border);
+    border-radius: 14px;
+
+    &.is-current {
+        border-color: var(--i-up);
+        box-shadow: 0 0 0 1px var(--i-up);
+    }
+
+    .twi-list {
+        flex: 1;
+    }
+
+    &__name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 0;
+        font-size: 16px;
+        font-weight: 900;
+    }
+
+    &__price {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 900;
+
+        small {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--i-dim);
+        }
+    }
+}
+
+.twi-tag {
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #04210f;
+    background: var(--i-up);
+    border-radius: 99px;
+}
+
+@media (max-width: 1000px) {
+    .twi-plans {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .twi-row4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .twi-plans,
+    .twi-row4 {
+        grid-template-columns: 1fr;
+    }
+
+    .twi-table__row.five {
+        grid-template-columns: 1.3fr 0.6fr 0.9fr 0.9fr 0.9fr;
+        font-size: 11px;
+    }
+}
+
+// ---- Transparency, Plans and plan limits ----
+.twi-link {
+    padding: 0;
+    font: inherit;
+    font-weight: 800;
+    color: #8fb3ff;
+    text-decoration: underline;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.twi-list {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+
+    li {
+        margin-bottom: 8px;
+    }
+}
+
+.twi-row4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.twi-field__box select {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--i-text);
+    background: transparent;
+    border: 0;
+    outline: 0;
+
+    option {
+        color: #111;
+    }
+}
+
+.twi-table__row.five {
+    grid-template-columns: 1.4fr 0.8fr 1fr 1fr 1fr;
+}
+
+.twi-faq {
+    border-top: 1px solid var(--i-line);
+
+    &:first-of-type {
+        margin-top: 8px;
+    }
+
+    &__q {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        padding: 12px 0;
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--i-text);
+        text-align: left;
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+
+    &__a {
+        margin: 0 0 12px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--i-dim);
+    }
+}
+
+.twi-locked {
+    border-style: dashed;
+}
+
+.twi-pills button.is-locked {
+    opacity: 0.6;
+}
+
+.twi-foot__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.twi-btn--ghost {
+    background: transparent;
+    border: 1px solid var(--i-border);
+}
+
+.twi-badge {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 800;
+    background: rgba(46, 229, 157, 0.14);
+    border: 1px solid var(--i-up);
+    border-radius: 99px;
+}
+
+.twi-plans {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.twi-plan {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px;
+    background: var(--i-card);
+    border: 1px solid var(--i-border);
+    border-radius: 14px;
+
+    &.is-featured {
+        border-color: var(--i-blue);
+        box-shadow: 0 0 0 1px var(--i-blue);
+    }
+
+    &.is-current {
+        border-color: var(--i-up);
+    }
+
+    &__name {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 900;
+    }
+
+    &__price {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 900;
+
+        span {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--i-dim);
+        }
+    }
+
+    .twi-list {
+        flex: 1;
+    }
+
+    &__note {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--i-dim);
+    }
+}
+
+.twi-steps {
+    margin: 8px 0 12px;
+    padding-left: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.55;
+}
+
+@media (max-width: 1100px) {
+    .twi-plans {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .twi-row4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 820px) {
+    .twi-plans,
+    .twi-row4 {
+        grid-template-columns: 1fr;
+    }
+
+    .twi-table__row.five {
+        grid-template-columns: 1.2fr 0.7fr 1fr 1fr 1fr;
+        font-size: 11px;
+    }
+}

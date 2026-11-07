@@ -3,7 +3,7 @@
  * Trades are always oldest first, newest last.
  */
 
-export type TRange = 'today' | '7d' | '30d' | 'all';
+export type TRange = 'today' | '7d' | '30d' | 'all' | 'max';
 
 export type TTrade = {
     id: number;
@@ -164,7 +164,7 @@ export const dailyNet = (trades: TTrade[]): { day: string; net: number }[] => {
 
 /** Start of the chosen range in epoch seconds, or undefined for "latest 500 trades". */
 export const rangeStart = (range: TRange, now = new Date()): number | undefined => {
-    if (range === 'all') return undefined;
+    if (range === 'all' || range === 'max') return undefined;
     if (range === 'today')
         return Math.floor(new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / 1000);
     const days = range === '7d' ? 7 : 30;
@@ -203,3 +203,27 @@ export const expectedValue = (stake: number, payout: number, winRatePercent: num
 
 /** How much you win for every 1 you risk. */
 export const rewardToRisk = (stake: number, payout: number): number => (stake > 0 ? (payout - stake) / stake : 0);
+
+/** Results grouped by the hour of the day (your local time), earliest hour first. */
+export const byHour = (trades: TTrade[]): TGroupRow[] =>
+    groupBy(trades, t => `${String(new Date(t.time * 1000).getHours()).padStart(2, '0')}:00`).sort((a, b) =>
+        a.key < b.key ? -1 : 1
+    );
+
+const csvCell = (v: string | number) => {
+    const text = String(v);
+    return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+};
+
+/** The trades as CSV text, newest first, ready to download. */
+export const tradesToCsv = (trades: TTrade[]): string => {
+    const head = 'time,market,trade_type,stake,payout,profit';
+    const rows = [...trades]
+        .sort((a, b) => b.time - a.time)
+        .map(t =>
+            [new Date(t.time * 1000).toISOString(), marketName(t.symbol), t.type, t.stake, t.payout, t.profit]
+                .map(csvCell)
+                .join(',')
+        );
+    return [head, ...rows].join('\n');
+};

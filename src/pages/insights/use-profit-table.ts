@@ -21,15 +21,23 @@ export const useProfitTable = (range: TRange) => {
         try {
             const from = rangeStart(range);
             const send = api_base.api.send.bind(api_base.api) as unknown as (request: unknown) => Promise<unknown>;
-            const res = (await send({
-                profit_table: 1,
-                description: 1,
-                sort: 'DESC',
-                limit: 500,
-                ...(from ? { date_from: String(from) } : {}),
-            })) as { error?: { message?: string }; profit_table?: { transactions?: unknown[] } };
-            if (res?.error) throw new Error(res.error.message || 'Deriv could not return your trades.');
-            setTrades(toTrades((res?.profit_table?.transactions || []) as Parameters<typeof toTrades>[0]));
+            const pages = range === 'max' ? 4 : 1;
+            let rows: unknown[] = [];
+            for (let page = 0; page < pages; page += 1) {
+                const res = (await send({
+                    profit_table: 1,
+                    description: 1,
+                    sort: 'DESC',
+                    limit: 500,
+                    offset: page * 500,
+                    ...(from ? { date_from: String(from) } : {}),
+                })) as { error?: { message?: string }; profit_table?: { transactions?: unknown[] } };
+                if (res?.error) throw new Error(res.error.message || 'Deriv could not return your trades.');
+                const got = res?.profit_table?.transactions || [];
+                rows = [...rows, ...got];
+                if (got.length < 500) break;
+            }
+            setTrades(toTrades(rows as Parameters<typeof toTrades>[0]));
             setUpdated(Date.now());
         } catch (e) {
             setTrades([]);
