@@ -1,26 +1,19 @@
-// EA Traders Analysis Tool: flat, high-contrast panels that are quick to read.
+// Analysis Tool: royal-blue panels, coloured digit rings, fading result bars and letter chips.
 .twh-digit-tools {
-    --dt-text: #ffffff;
-    --dt-dim: #aebce8;
+    --dt-text: #f4f7ff;
+    --dt-dim: #b8c8ff;
     --dt-line: rgba(110, 150, 255, 0.35);
-    --dt-green: #2fe08a;
-    --dt-orange: #ffa53d;
-    --dt-red: #ff4d57;
-    --dt-blue: #3a78ff;
-    --dt-gold: #ffb83d;
-    --dt-neutral: #8da0d0;
-    --dt-green-rgb: 47, 224, 138;
-    --dt-orange-rgb: 255, 165, 61;
-    --dt-neutral-rgb: 141, 160, 208;
+    --dt-ring: #2f6bff;
+    --dt-track: #1c5be8;
 
-    background: linear-gradient(170deg, #091342 0%, #0b1b5a 100%);
-    border: 1px solid var(--dt-line);
-    border-radius: 16px;
-    padding: 20px;
-    margin-top: 18px;
-    text-align: left;
     color: var(--dt-text);
-    font-weight: 600;
+    font-weight: 700;
+    text-align: left;
+    background: linear-gradient(180deg, #0a1450 0%, #0e2490 45%, #2f55c8 100%);
+    border: 1px solid rgba(90, 130, 255, 0.5);
+    border-radius: 16px;
+    padding: 18px 18px 22px;
+    margin-top: 16px;
 
     &__header {
         display: flex;
@@ -28,28 +21,16 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+        padding-bottom: 14px;
         margin-bottom: 14px;
+        border-bottom: 1px solid var(--dt-line);
     }
 
     &__controls {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 10px;
-        flex-wrap: wrap;
-
-        select {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--dt-line);
-            color: var(--dt-text);
-            font-size: 14px;
-            font-weight: 700;
-            padding: 9px 12px;
-            border-radius: 10px;
-
-            option {
-                color: #111;
-            }
-        }
     }
 
     &__status {
@@ -57,21 +38,22 @@
         align-items: center;
         gap: 6px;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--dt-dim);
 
         .dot {
             width: 9px;
             height: 9px;
             border-radius: 50%;
-            background: var(--dt-neutral);
+            background: #6d83c8;
         }
 
         &.is-live {
-            color: var(--dt-green);
+            color: #3be08f;
 
             .dot {
-                background: var(--dt-green);
+                background: #3be08f;
+                box-shadow: 0 0 8px #3be08f;
             }
         }
     }
@@ -80,58 +62,48 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        line-height: 1.15;
+        line-height: 1.1;
     }
 
     &__price-label {
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
         color: var(--dt-dim);
     }
 
     &__price-value {
         font-size: 28px;
-        font-weight: 800;
-        color: var(--dt-gold);
+        font-weight: 900;
+        color: #ff6a4d;
         font-variant-numeric: tabular-nums;
     }
 
     &__error {
-        background: rgba(255, 77, 87, 0.15);
-        border: 1px solid rgba(255, 77, 87, 0.55);
-        color: #ffc2c6;
-        font-size: 12px;
         padding: 9px 12px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: #ffd0d8;
+        background: rgba(255, 90, 110, 0.18);
+        border: 1px solid rgba(255, 90, 110, 0.6);
         border-radius: 10px;
-        margin: 12px 0;
     }
 
     &__rings {
         display: grid;
-        grid-template-columns: repeat(10, minmax(0, 72px));
+        grid-template-columns: repeat(10, minmax(0, 92px));
         justify-content: center;
         gap: 14px;
-        padding: 22px 0 30px;
-    }
-
-    &__legend {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px 22px;
-        padding-bottom: 18px;
-        margin-bottom: 18px;
+        padding: 14px 0 34px;
+        margin-bottom: 14px;
         border-bottom: 1px solid var(--dt-line);
-        font-size: 12px;
-        color: var(--dt-dim);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+        gap: 16px;
+        align-items: start;
     }
 
     &__disclaimer {
@@ -139,241 +111,230 @@
     }
 }
 
-// ---- help ----
-.twh-help-btn,
-.twh-disclaimer-btn {
+// ---- header pills ----
+.twh-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 8px 14px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
-    border-radius: 99px;
-    cursor: pointer;
+    color: var(--dt-text);
+    background: rgba(8, 18, 80, 0.7);
+    border: 1px solid rgba(150, 180, 255, 0.5);
+    border-radius: 12px;
+
+    &--select {
+        max-width: 100%;
+        font: inherit;
+        font-weight: 800;
+        outline: 0;
+
+        option {
+            color: #111;
+        }
+    }
+
+    &--ticks {
+        border-color: #2f6bff;
+
+        span {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            color: #6aa0ff;
+        }
+    }
+
+    select {
+        font: inherit;
+        color: var(--dt-text);
+        background: transparent;
+        border: 0;
+        outline: 0;
+
+        option {
+            color: #111;
+        }
+    }
 }
 
 .twh-help-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 800;
     color: var(--dt-text);
     background: transparent;
-    border: 1px solid var(--dt-blue);
+    border: 1px solid rgba(150, 180, 255, 0.5);
+    border-radius: 99px;
+    cursor: pointer;
 
     span {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
+        font-size: 11px;
+        background: #2f6bff;
         border-radius: 50%;
-        background: var(--dt-blue);
-        font-size: 12px;
     }
 
     &.is-open {
-        background: rgba(58, 120, 255, 0.25);
+        background: rgba(47, 107, 255, 0.3);
     }
 }
 
 .twh-help {
-    margin-top: 12px;
     padding: 14px 16px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--dt-line);
+    margin-bottom: 14px;
+    background: rgba(6, 14, 70, 0.75);
+    border: 1px solid rgba(110, 150, 255, 0.5);
     border-radius: 12px;
 
     dl {
         display: grid;
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 22px;
         margin: 0;
     }
 
     dt {
-        font-size: 13px;
-        font-weight: 800;
-        color: var(--dt-gold);
+        font-size: 12px;
+        font-weight: 900;
+        color: #ffb62e;
     }
 
     dd {
         margin: 2px 0 0;
         font-size: 13px;
-        font-weight: 500;
+        font-weight: 600;
         line-height: 1.45;
-        color: #e4eaff;
+        color: var(--dt-dim);
     }
 
     &__note {
         margin: 12px 0 0;
-        padding-top: 10px;
-        border-top: 1px solid var(--dt-line);
         font-size: 12px;
-        color: var(--dt-dim);
-    }
-}
-
-// ---- risk disclaimer: simple amber button ----
-.twh-disclaimer-btn {
-    color: #3a2600;
-    background: var(--dt-gold);
-    border: 0;
-    border-radius: 8px;
-
-    &.is-open {
-        background: #ffd27a;
-    }
-}
-
-.twh-disclaimer-text {
-    margin-top: 10px;
-    max-width: 640px;
-    padding: 12px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1.5;
-    color: #ffe9ad;
-    background: rgba(255, 184, 61, 0.12);
-    border: 1px solid rgba(255, 184, 61, 0.45);
-    border-radius: 10px;
-}
-
-// ---- legend ----
-.twh-legend {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-
-    &::before {
-        content: '';
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        border: 3px solid var(--dt-blue);
-    }
-
-    &--hot::before {
-        border-color: var(--dt-green);
-    }
-
-    &--cold::before {
-        border-color: var(--dt-red);
-    }
-
-    &--current::before {
-        width: 0;
-        height: 0;
-        border: 0;
-        border-radius: 0;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-bottom: 10px solid var(--dt-gold);
+        font-weight: 700;
+        color: #ffd27a;
     }
 }
 
 // ---- digit circles ----
 .twh-ring {
+    --rc: var(--dt-ring);
     position: relative;
-    aspect-ratio: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    aspect-ratio: 1;
+    background: #0a1a78;
+    border: 2px solid var(--rc);
     border-radius: 50%;
-    border: 3px solid var(--dt-blue);
-    background: rgba(8, 24, 100, 0.85);
+    transition: transform 0.2s ease;
 
     &__digit {
-        font-size: clamp(18px, 2.6vw, 26px);
-        font-weight: 800;
+        font-size: clamp(18px, 2.4vw, 27px);
+        font-weight: 900;
         line-height: 1;
     }
 
     &__pct {
         margin-top: 3px;
-        font-size: clamp(10px, 1.2vw, 12px);
-        font-weight: 700;
-        color: var(--dt-dim);
+        font-size: clamp(9px, 1.1vw, 12px);
+        font-weight: 800;
+        color: #dbe5ff;
     }
 
-    &--hot {
-        border-color: var(--dt-green);
-        box-shadow: 0 0 14px rgba(var(--dt-green-rgb), 0.5);
-
-        .twh-ring__pct {
-            color: var(--dt-text);
-        }
+    &--green {
+        --rc: #3be08f;
+        transform: scale(1.12);
+        border-width: 4px;
+        box-shadow: 0 0 16px rgba(59, 224, 143, 0.6);
     }
 
-    &--cold {
-        border-color: var(--dt-red);
-        box-shadow: 0 0 14px rgba(255, 77, 87, 0.5);
+    &--blue {
+        --rc: #2d7bff;
+        transform: scale(1.12);
+        border-width: 4px;
+        box-shadow: 0 0 18px rgba(45, 123, 255, 0.85);
+    }
 
-        .twh-ring__pct {
-            color: var(--dt-text);
-        }
+    &--gold {
+        --rc: #ffb62e;
+        transform: scale(1.1);
+        border-width: 4px;
+        box-shadow: 0 0 14px rgba(255, 182, 46, 0.55);
+    }
+
+    &--red {
+        --rc: #ff4d4d;
+        transform: scale(1.14);
+        border-width: 4px;
+        box-shadow: 0 0 16px rgba(255, 77, 77, 0.65);
     }
 
     &__pointer {
         position: absolute;
-        bottom: -17px;
+        bottom: -24px;
         left: 50%;
-        transform: translateX(-50%);
         width: 0;
         height: 0;
+        transform: translateX(-50%);
         border-left: 7px solid transparent;
         border-right: 7px solid transparent;
-        border-bottom: 11px solid var(--dt-gold);
+        border-bottom: 11px solid #ff8a3d;
     }
 }
 
 // ---- panels ----
 .twh-panel {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    padding: 14px;
-    background: rgba(30, 70, 190, 0.18);
-    border: 1px solid var(--dt-line);
+    background: linear-gradient(180deg, rgba(36, 72, 205, 0.55), rgba(22, 48, 160, 0.5));
+    border: 1px solid rgba(90, 135, 255, 0.65);
     border-radius: 14px;
 
     &__head {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
         gap: 8px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--dt-line);
     }
 
     &__title {
         margin: 0;
         font-size: 14px;
-        font-weight: 800;
-        letter-spacing: 0.06em;
+        font-weight: 900;
+        letter-spacing: 0.03em;
         text-transform: uppercase;
     }
 
     &__streak {
         font-size: 13px;
         font-weight: 800;
-        color: var(--tone);
-        white-space: nowrap;
+        color: #ff9a3d;
     }
 
-    &__hint {
-        margin: 4px 0 12px;
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 1.4;
-        color: var(--dt-dim);
+    &__body {
+        padding: 12px 16px 16px;
     }
 
     &__bars {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        margin: 12px 0 10px;
+        margin: 14px 0 12px;
     }
 
     &__footnote {
         margin-bottom: 10px;
         font-size: 11px;
-        font-weight: 500;
+        font-weight: 600;
         color: var(--dt-dim);
     }
 
@@ -382,74 +343,76 @@
         flex-wrap: wrap;
         align-items: center;
         gap: 6px;
-        margin-top: auto;
-        padding-top: 4px;
-    }
-
-    &__key {
-        margin: 8px 0 0;
-        font-size: 11px;
-        font-weight: 500;
-        color: var(--dt-dim);
     }
 }
 
-.twh-tone-a {
-    --tone: var(--dt-green);
-    --tone-rgb: var(--dt-green-rgb);
+// ---- colours: bars, percentages and chips share these ----
+.c-green {
+    --c: 59, 224, 143;
+}
+.c-amber {
+    --c: 255, 182, 46;
+}
+.c-orange {
+    --c: 255, 106, 61;
+}
+.c-lav {
+    --c: 169, 155, 255;
+}
+.c-coral {
+    --c: 255, 122, 138;
+}
+.c-red {
+    --c: 255, 84, 84;
+}
+.c-teal {
+    --c: 45, 224, 192;
+}
+.c-magenta {
+    --c: 214, 90, 168;
+}
+.c-indigo {
+    --c: 120, 130, 255;
+}
+.c-pink {
+    --c: 255, 106, 138;
+}
+.c-grey {
+    --c: 150, 170, 220;
 }
 
-.twh-tone-b {
-    --tone: var(--dt-orange);
-    --tone-rgb: var(--dt-orange-rgb);
-}
-
-.twh-tone-c {
-    --tone: var(--dt-neutral);
-    --tone-rgb: var(--dt-neutral-rgb);
-}
-
-// Percentage bars: the fill fades in from the left and gets stronger as the
-// percentage grows (--p is 0..1).
 .twh-bar {
     display: grid;
-    grid-template-columns: 54px 1fr 52px;
+    grid-template-columns: 64px 1fr 56px;
     align-items: center;
     gap: 10px;
     font-size: 13px;
 
     &__label {
-        font-weight: 800;
-        color: var(--tone);
+        font-weight: 900;
+        color: rgb(var(--c));
     }
 
     &__track {
-        height: 10px;
+        height: 7px;
+        background: var(--dt-track);
         border-radius: 99px;
-        background: rgba(255, 255, 255, 0.12);
         overflow: hidden;
     }
 
+    // fades in from the left and is strongest at its end
     &__fill {
         height: 100%;
         border-radius: 99px;
-        background: linear-gradient(
-            90deg,
-            rgba(var(--tone-rgb), 0.12) 0%,
-            rgba(var(--tone-rgb), 0.6) 55%,
-            rgb(var(--tone-rgb)) 100%
-        );
-        opacity: calc(0.55 + var(--p, 0) * 0.45);
-        transition:
-            width 0.35s ease,
-            opacity 0.35s ease;
+        background: linear-gradient(90deg, rgba(var(--c), 0.1) 0%, rgba(var(--c), 0.65) 55%, rgb(var(--c)) 100%);
+        transition: width 0.35s ease;
     }
 
     &__pct {
         text-align: right;
-        font-weight: 800;
-        font-size: 14px;
+        font-weight: 900;
         font-variant-numeric: tabular-nums;
+        color: rgb(var(--c));
     }
 }
 
@@ -459,81 +422,111 @@
     justify-content: center;
     width: 28px;
     height: 28px;
-    border-radius: 8px;
     font-size: 13px;
-    font-weight: 800;
-    color: var(--tone);
-    border: 1.5px solid var(--tone);
-    background: rgba(var(--tone-rgb), 0.16);
+    font-weight: 900;
+    color: rgb(var(--c));
+    background: rgba(var(--c), 0.2);
+    border: 1.5px solid rgba(var(--c), 0.9);
+    border-radius: 7px;
 }
 
 .twh-chip-more {
-    height: 28px;
+    height: 26px;
     padding: 0 10px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--dt-text);
-    background: transparent;
-    border: 1px solid var(--dt-line);
-    border-radius: 8px;
+    background: rgba(8, 18, 80, 0.5);
+    border: 1px solid #2f6bff;
+    border-radius: 7px;
     cursor: pointer;
 }
 
+// digit pickers: a row of small outlined circles; the chosen one gets a red-orange ring
 .twh-picker {
-    display: grid;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-    gap: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
 
     &__btn {
-        width: 100%;
-        max-width: 34px;
-        aspect-ratio: 1;
-        padding: 0;
-        border-radius: 50%;
-        font-size: 13px;
-        font-weight: 800;
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        font-weight: 900;
         color: var(--dt-text);
-        background: transparent;
-        border: 1.5px solid var(--dt-blue);
+        background: #0a1a78;
+        border: 1.5px solid #2f6bff;
+        border-radius: 50%;
         cursor: pointer;
 
         &.is-active {
-            color: #231600;
-            background: var(--dt-gold);
-            border-color: var(--dt-gold);
+            border: 2px solid #ff5a4d;
+            box-shadow: 0 0 8px rgba(255, 90, 77, 0.6);
         }
     }
 }
 
-// Wide desktop: all four panels in one row.
-@media (min-width: 1200px) {
-    .twh-digit-tools__grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .twh-bar {
-        grid-template-columns: 50px 1fr 48px;
-        gap: 8px;
-    }
+// ---- risk disclaimer ----
+.twh-disclaimer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #3a2a00;
+    background: #f5c542;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-@media (max-width: 720px) {
+.twh-disclaimer-text {
+    max-width: 640px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #ffe9ad;
+    background: rgba(8, 18, 80, 0.6);
+    border: 1px solid rgba(245, 197, 66, 0.6);
+    border-radius: 10px;
+}
+
+@media (max-width: 760px) {
     .twh-digit-tools {
         padding: 14px;
 
         &__rings {
             grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 12px;
-            row-gap: 32px;
+            row-gap: 34px;
         }
 
         &__grid {
             grid-template-columns: 1fr;
         }
     }
+
+    .twh-help dl {
+        grid-template-columns: 1fr;
+    }
+
+    .twh-picker {
+        gap: 4px;
+
+        &__btn {
+            width: 25px;
+            height: 25px;
+            font-size: 11px;
+        }
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .twh-ring,
     .twh-bar__fill {
         transition: none;
     }

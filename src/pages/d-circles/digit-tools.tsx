@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import {
     classifyEvenOdd,
     classifyMatchDiffer,
@@ -24,17 +24,18 @@ const SYMBOLS = [
     { value: '1HZ100V', label: 'Volatility 100 (1s) Index' },
 ];
 
-const TICK_COUNT_OPTIONS = [25, 50, 100, 250, 500, 1000];
+const TICK_COUNT_OPTIONS = [100, 250, 500, 1000];
 const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const CHIPS_COLLAPSED = 10;
 const CHIPS_EXPANDED = 40;
 
-type TTone = 'a' | 'b' | 'c';
+type TColor = 'green' | 'amber' | 'orange' | 'lav' | 'coral' | 'red' | 'teal' | 'magenta' | 'indigo' | 'pink' | 'grey';
+type TRank = 'green' | 'blue' | 'gold' | 'red' | '';
 
 const HELP: Array<[string, string]> = [
     [
         'Circles',
-        'Each circle is a last digit (0 to 9). The number under it is how often that digit appeared. Green appeared the most, red the least.',
+        'Each circle is a last digit (0 to 9). The number under it is how often that digit appeared. Green appeared the most, blue second most, yellow second least and red the least.',
     ],
     ['Triangle', 'The small triangle sits under the digit of the latest tick.'],
     [
@@ -46,26 +47,22 @@ const HELP: Array<[string, string]> = [
     ['Rise / Fall', 'Shows whether the price went up or down from one tick to the next.'],
     [
         'Letters',
-        'The small boxes show the latest results, newest on the right. A tag like 3x Under means that result happened 3 times in a row.',
+        'The small boxes show the latest results, newest on the right. O = Over, U = Under, M = Match, D = Differ, E = Even, R = Rise, F = Fall. A tag like 3x Under means that result happened 3 times in a row.',
     ],
 ];
 
 const DigitRing = ({
     digit,
     percent,
-    isHot,
-    isCold,
+    rank,
     isCurrent,
 }: {
     digit: number;
     percent: number;
-    isHot: boolean;
-    isCold: boolean;
+    rank: TRank;
     isCurrent: boolean;
 }) => (
-    <div
-        className={['twh-ring', isHot ? 'twh-ring--hot' : '', isCold ? 'twh-ring--cold' : ''].filter(Boolean).join(' ')}
-    >
+    <div className={`twh-ring ${rank ? `twh-ring--${rank}` : ''}`}>
         <span className='twh-ring__digit'>{digit}</span>
         <span className='twh-ring__pct'>{percent.toFixed(1)}%</span>
         {isCurrent && <span className='twh-ring__pointer' role='img' aria-label='Latest digit' />}
@@ -88,26 +85,22 @@ const DigitPicker = ({ value, onChange, label }: { value: number; onChange: (d: 
     </div>
 );
 
-type TSide = { label: string; pct: number; tone: TTone };
+type TSide = { label: string; pct: number; color: TColor };
 
 const OutcomePanel = ({
     title,
-    hint,
     sides,
     outcomes,
-    toneFor,
+    chipColor,
     labelFor,
-    keyText,
     footnote,
     children,
 }: {
     title: string;
-    hint: string;
     sides: [TSide, TSide];
     outcomes: string[];
-    toneFor: (letter: string) => TTone;
+    chipColor: (letter: string) => TColor;
     labelFor: (letter: string) => string;
-    keyText: string;
     footnote?: string;
     children?: ReactNode;
 }) => {
@@ -120,58 +113,50 @@ const OutcomePanel = ({
             <header className='twh-panel__head'>
                 <h3 className='twh-panel__title'>{title}</h3>
                 {streak.letter && (
-                    <span className={`twh-panel__streak twh-tone-${toneFor(streak.letter)}`}>
+                    <span className='twh-panel__streak'>
                         {streak.length}x {labelFor(streak.letter)}
                     </span>
                 )}
             </header>
-            <p className='twh-panel__hint'>{hint}</p>
 
-            {children}
+            <div className='twh-panel__body'>
+                {children}
 
-            <div className='twh-panel__bars'>
-                {sides.map(side => (
-                    <div key={side.label} className={`twh-bar twh-tone-${side.tone}`}>
-                        <span className='twh-bar__label'>{side.label}</span>
-                        <div className='twh-bar__track'>
-                            <div
-                                className='twh-bar__fill'
-                                style={
-                                    {
-                                        width: `${Math.min(side.pct, 100)}%`,
-                                        '--p': Math.min(side.pct, 100) / 100,
-                                    } as CSSProperties
-                                }
-                            />
+                <div className='twh-panel__bars'>
+                    {sides.map(side => (
+                        <div key={side.label} className={`twh-bar c-${side.color}`}>
+                            <span className='twh-bar__label'>{side.label}</span>
+                            <div className='twh-bar__track'>
+                                <div className='twh-bar__fill' style={{ width: `${Math.min(side.pct, 100)}%` }} />
+                            </div>
+                            <span className='twh-bar__pct'>{side.pct.toFixed(1)}%</span>
                         </div>
-                        <span className='twh-bar__pct'>{side.pct.toFixed(1)}%</span>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
 
-            {footnote && <div className='twh-panel__footnote'>{footnote}</div>}
+                {footnote && <div className='twh-panel__footnote'>{footnote}</div>}
 
-            <div className='twh-panel__chips'>
-                {visible.map((letter, i) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <span key={i} className={`twh-chip twh-tone-${toneFor(letter)}`}>
-                        {letter}
-                    </span>
-                ))}
-                {outcomes.length > CHIPS_COLLAPSED && (
-                    <button type='button' className='twh-chip-more' onClick={() => setExpanded(v => !v)}>
-                        {expanded ? '− Less' : '+ More'}
-                    </button>
-                )}
+                <div className='twh-panel__chips'>
+                    {visible.map((letter, i) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <span key={i} className={`twh-chip c-${chipColor(letter)}`}>
+                            {letter}
+                        </span>
+                    ))}
+                    {outcomes.length > CHIPS_COLLAPSED && (
+                        <button type='button' className='twh-chip-more' onClick={() => setExpanded(v => !v)}>
+                            {expanded ? '− Less' : '+ More'}
+                        </button>
+                    )}
+                </div>
             </div>
-            <p className='twh-panel__key'>{keyText}</p>
         </section>
     );
 };
 
 const DigitTools = () => {
     const [symbol, setSymbol] = useState('R_100');
-    const [tickCount, setTickCount] = useState(100);
+    const [tickCount, setTickCount] = useState(1000);
     const [barrier, setBarrier] = useState(5);
     const [matchDigit, setMatchDigit] = useState(5);
     const [showHelp, setShowHelp] = useState(false);
@@ -182,8 +167,16 @@ const DigitTools = () => {
     const stats = useMemo(() => {
         const percents = digitPercents(digits);
         const hasData = digits.length > 0;
-        const maxPct = Math.max(...percents);
-        const minPct = Math.min(...percents);
+        // rank digits: most frequent (green), second most (blue), second least (yellow), least (red)
+        const order = percents.map((_, d) => d).sort((a, b) => percents[b] - percents[a] || a - b);
+        const rankOf = (d: number): TRank => {
+            if (!hasData) return '';
+            if (d === order[0]) return 'green';
+            if (d === order[1]) return 'blue';
+            if (d === order[8]) return 'gold';
+            if (d === order[9]) return 'red';
+            return '';
+        };
 
         const overUnder = classifyOverUnder(digits, barrier);
         const evenOdd = classifyEvenOdd(digits);
@@ -192,8 +185,7 @@ const DigitTools = () => {
 
         return {
             percents,
-            hotDigit: hasData ? percents.indexOf(maxPct) : -1,
-            coldDigit: hasData ? percents.indexOf(minPct) : -1,
+            rankOf,
             currentDigit: hasData ? digits[digits.length - 1] : -1,
             overUnder,
             overPct: sharePercent(overUnder, 'O'),
@@ -215,43 +207,51 @@ const DigitTools = () => {
         <div className='twh-digit-tools'>
             <div className='twh-digit-tools__header'>
                 <div className='twh-digit-tools__controls'>
-                    <select value={symbol} onChange={e => setSymbol(e.target.value)} aria-label='Market'>
+                    <select
+                        className='twh-pill twh-pill--select'
+                        value={symbol}
+                        onChange={e => setSymbol(e.target.value)}
+                        aria-label='Market'
+                    >
                         {SYMBOLS.map(s => (
                             <option key={s.value} value={s.value}>
                                 {s.label}
                             </option>
                         ))}
                     </select>
-                    <select
-                        value={tickCount}
-                        onChange={e => setTickCount(Number(e.target.value))}
-                        aria-label='Number of ticks'
+                    <label className='twh-pill twh-pill--ticks'>
+                        <span>TICKS</span>
+                        <select
+                            value={tickCount}
+                            onChange={e => setTickCount(Number(e.target.value))}
+                            aria-label='Number of ticks'
+                        >
+                            {TICK_COUNT_OPTIONS.map(n => (
+                                <option key={n} value={n}>
+                                    {n}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <button
+                        type='button'
+                        className={`twh-help-btn ${showHelp ? 'is-open' : ''}`}
+                        onClick={() => setShowHelp(v => !v)}
+                        aria-expanded={showHelp}
+                        aria-controls='twh-help'
                     >
-                        {TICK_COUNT_OPTIONS.map(n => (
-                            <option key={n} value={n}>
-                                Last {n} ticks
-                            </option>
-                        ))}
-                    </select>
+                        <span aria-hidden='true'>?</span> How to read this
+                    </button>
                     <span className={`twh-digit-tools__status ${connected ? 'is-live' : ''}`}>
                         <span className='dot' /> {connected ? 'Live' : 'Connecting...'}
                     </span>
                 </div>
                 <div className='twh-digit-tools__price'>
-                    <span className='twh-digit-tools__price-label'>Live price</span>
+                    <span className='twh-digit-tools__price-label'>LIVE PRICE</span>
                     <span className='twh-digit-tools__price-value'>{latestPrice ?? '—'}</span>
                 </div>
             </div>
 
-            <button
-                type='button'
-                className={`twh-help-btn ${showHelp ? 'is-open' : ''}`}
-                onClick={() => setShowHelp(v => !v)}
-                aria-expanded={showHelp}
-                aria-controls='twh-help'
-            >
-                <span aria-hidden='true'>?</span> How to read this
-            </button>
             {showHelp && (
                 <div id='twh-help' className='twh-help' role='region'>
                     <dl>
@@ -276,30 +276,22 @@ const DigitTools = () => {
                         key={digit}
                         digit={digit}
                         percent={pct}
-                        isHot={digit === stats.hotDigit}
-                        isCold={digit === stats.coldDigit}
+                        rank={stats.rankOf(digit)}
                         isCurrent={digit === stats.currentDigit}
                     />
                 ))}
-            </div>
-            <div className='twh-digit-tools__legend'>
-                <span className='twh-legend twh-legend--hot'>Green: shows up most</span>
-                <span className='twh-legend twh-legend--cold'>Red: shows up least</span>
-                <span className='twh-legend twh-legend--current'>Triangle: latest digit</span>
             </div>
 
             <div className='twh-digit-tools__grid'>
                 <OutcomePanel
                     title='Over / Under'
-                    hint='Is the last digit higher or lower than the digit you pick?'
                     sides={[
-                        { label: 'Over', pct: stats.overPct, tone: 'a' },
-                        { label: 'Under', pct: stats.underPct, tone: 'b' },
+                        { label: 'OVER', pct: stats.overPct, color: 'green' },
+                        { label: 'UNDER', pct: stats.underPct, color: 'amber' },
                     ]}
                     outcomes={stats.overUnder}
-                    toneFor={l => (l === 'O' ? 'a' : l === 'U' ? 'b' : 'c')}
+                    chipColor={l => (l === 'O' ? 'teal' : l === 'U' ? 'magenta' : 'grey')}
                     labelFor={l => (l === 'O' ? 'Over' : l === 'U' ? 'Under' : 'Tie')}
-                    keyText='O = Over, U = Under, = means equal to your digit'
                     footnote={`Equal to ${barrier}: ${stats.tiePct.toFixed(1)}% (counts for neither side)`}
                 >
                     <DigitPicker value={barrier} onChange={setBarrier} label='Over/Under barrier' />
@@ -307,43 +299,37 @@ const DigitTools = () => {
 
                 <OutcomePanel
                     title='Match / Differ'
-                    hint='Is the last digit the same as the digit you pick?'
                     sides={[
-                        { label: 'Match', pct: stats.matchPct, tone: 'a' },
-                        { label: 'Differ', pct: stats.differPct, tone: 'b' },
+                        { label: 'MATCH', pct: stats.matchPct, color: 'orange' },
+                        { label: 'DIFFER', pct: stats.differPct, color: 'lav' },
                     ]}
                     outcomes={stats.matchDiffer}
-                    toneFor={l => (l === 'M' ? 'a' : 'b')}
+                    chipColor={l => (l === 'M' ? 'orange' : 'indigo')}
                     labelFor={l => (l === 'M' ? 'Match' : 'Differ')}
-                    keyText='M = Match, D = Differ'
                 >
                     <DigitPicker value={matchDigit} onChange={setMatchDigit} label='Match digit' />
                 </OutcomePanel>
 
                 <OutcomePanel
                     title='Even / Odd'
-                    hint='Is the last digit an even or an odd number?'
                     sides={[
-                        { label: 'Even', pct: stats.evenPct, tone: 'a' },
-                        { label: 'Odd', pct: stats.oddPct, tone: 'b' },
+                        { label: 'EVEN', pct: stats.evenPct, color: 'coral' },
+                        { label: 'ODD', pct: stats.oddPct, color: 'red' },
                     ]}
                     outcomes={stats.evenOdd}
-                    toneFor={l => (l === 'E' ? 'a' : 'b')}
+                    chipColor={l => (l === 'E' ? 'coral' : 'red')}
                     labelFor={l => (l === 'E' ? 'Even' : 'Odd')}
-                    keyText='E = Even, O = Odd'
                 />
 
                 <OutcomePanel
                     title='Rise / Fall'
-                    hint='Did the price go up or down on the latest ticks?'
                     sides={[
-                        { label: 'Rise', pct: stats.risePct, tone: 'a' },
-                        { label: 'Fall', pct: stats.fallPct, tone: 'b' },
+                        { label: 'RISE', pct: stats.risePct, color: 'green' },
+                        { label: 'FALL', pct: stats.fallPct, color: 'red' },
                     ]}
                     outcomes={stats.riseFall}
-                    toneFor={l => (l === 'R' ? 'a' : 'b')}
+                    chipColor={l => (l === 'R' ? 'teal' : 'pink')}
                     labelFor={l => (l === 'R' ? 'Rise' : 'Fall')}
-                    keyText='R = Rise, F = Fall'
                 />
             </div>
 
@@ -355,7 +341,7 @@ const DigitTools = () => {
                     aria-expanded={showDisclaimer}
                     aria-controls='twh-risk-disclaimer'
                 >
-                    <span aria-hidden='true'>&#9888;</span> Risk disclaimer
+                    <span aria-hidden='true'>&#9888;</span> Risk Disclaimer
                 </button>
                 {showDisclaimer && (
                     <div id='twh-risk-disclaimer' className='twh-disclaimer-text' role='region'>
