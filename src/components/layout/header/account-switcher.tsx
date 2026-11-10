@@ -168,9 +168,9 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                                 })}
                             >
                                 {account.isVirtual ? (
-                                    <Localize i18n_default_text='Demo account' />
-                                ) : (
                                     <Localize i18n_default_text='Real account' />
+                                ) : (
+                                    <Localize i18n_default_text='Demo account' />
                                 )}
                             </Text>
                             <Text size='xs' weight='bold' className='acc-dropdown__balance'>
