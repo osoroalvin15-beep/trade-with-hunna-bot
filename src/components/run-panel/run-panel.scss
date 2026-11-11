@@ -450,8 +450,7 @@
             word-break: break-word;
         }
     }
-/* Hide run panel when not on bot builder or chart view */
-body:not(:has([data-active-tab=“bot_builder”])) .run-panel,
-body:not(:has([data-active-tab=“bot_builder”])) .run-panel__container {
-  display: none !important;
+/* Safe override */
+.run-panel {
+  // Add any needed styling here safely
 }
