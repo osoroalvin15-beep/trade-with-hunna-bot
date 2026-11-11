@@ -265,6 +265,10 @@ const RunPanel = observer(() => {
         toggleStatisticsInfoModal,
     } = run_panel;
     const { statistics } = transactions;
+    const { active_tab } = dashboard;
+    if (active_tab !== DBOT_TABS.BOT_BUILDER) {
+        return null;
+    }
     const { active_tour, active_tab } = dashboard;
     const { total_payout, total_profit, total_stake, won_contracts, lost_contracts, number_of_runs } = statistics;
     const { BOT_BUILDER, CHART } = DBOT_TABS;
