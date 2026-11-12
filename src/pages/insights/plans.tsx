@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { requestPlan } from '@/services/billing';
 import { BILLING_DAYS, PAYMENT, PLANS, planName, TPlan } from './plans-config';
 import { usePlan } from './use-plan';
@@ -14,6 +14,23 @@ const Plans = () => {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [sent, setSent] = useState(false);
+    const [copied, setCopied] = useState(false);
+    const cardRef = useRef<HTMLElement>(null);
+
+    // Bring the payment details into view when a plan is chosen (they sit below the plan cards).
+    useEffect(() => {
+        if (chosen) setTimeout(() => cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+    }, [chosen]);
+
+    async function copyNumber() {
+        try {
+            await navigator.clipboard.writeText(PAYMENT.number);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch {
+            // Copy not allowed here: the number is shown on screen anyway.
+        }
+    }
 
     const plan = PLANS.find(p => p.id === chosen);
     const paymentReady = Boolean(PAYMENT.number);
@@ -54,7 +71,9 @@ const Plans = () => {
             </header>
 
             {!billingReady && (
-                <p className='twi-note'>Paid plans open soon. Until then, every feature is free to use.</p>
+                <p className='twi-note'>
+                    Reports are free to use for now. You can already pick a plan below to see how to pay.
+                </p>
             )}
             {billingReady && !isAuthorized && (
                 <p className='twi-note'>Log in with your Deriv account to choose a plan.</p>
@@ -111,7 +130,7 @@ const Plans = () => {
             </div>
 
             {chosen && plan && (
-                <section className='twi-card' aria-live='polite'>
+                <section className='twi-card' aria-live='polite' ref={cardRef}>
                     <h3 className='twi-card__title'>
                         {plan.name} plan, {kes(plan.price)} for {BILLING_DAYS} days
                     </h3>
@@ -133,7 +152,10 @@ const Plans = () => {
                                         <>
                                             Open M-Pesa, choose <b>Send Money</b> and send <b>{kes(plan.price)}</b> to{' '}
                                             <b>{PAYMENT.number}</b>
-                                            {PAYMENT.name ? ` (${PAYMENT.name})` : ''}.
+                                            {PAYMENT.name ? ` (${PAYMENT.name})` : ''}.{' '}
+                                            <button type='button' className='twi-link' onClick={copyNumber}>
+                                                {copied ? 'Copied' : 'Copy number'}
+                                            </button>
                                         </>
                                     ) : (
                                         <>
