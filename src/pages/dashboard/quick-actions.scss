@@ -185,3 +185,13 @@
     }
 }
 
+
+// Bold labels on the dashboard buttons.
+.tab__dashboard__content button,
+.tab__dashboard__content .dc-btn,
+.tab__dashboard__content .dc-btn__text,
+.bot-dashboard button,
+.bot-dashboard .dc-btn,
+.bot-dashboard .dc-btn__text {
+    font-weight: 700;
+}
