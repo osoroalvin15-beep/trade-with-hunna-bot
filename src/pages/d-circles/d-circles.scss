@@ -1,5 +1,10 @@
 .twh-d-circles-tab {
-    max-width: 720px;
+    // Full width up to a comfortable maximum. Without an explicit width this tab shrank inside the
+    // tab row, which squeezed the ten digit rings and made the tool hard to read.
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 20px 16px 40px;
 

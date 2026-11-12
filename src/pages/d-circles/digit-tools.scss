@@ -531,3 +531,53 @@
         transition: none;
     }
 }
+
+// ---- Readability: brighter secondary text, larger small print ----
+.twh-digit-tools {
+    --dt-dim: #dbe4ff;
+
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+
+    &__status {
+        font-size: 13px;
+    }
+
+    &__price-label {
+        font-size: 11px;
+    }
+
+    &__rings {
+        grid-template-columns: repeat(10, minmax(0, 96px));
+    }
+}
+
+.twh-ring__pct {
+    font-size: clamp(11px, 1.2vw, 13px);
+}
+
+.twh-bar {
+    font-size: 14px;
+}
+
+.twh-chip {
+    font-size: 14px;
+}
+
+.twh-help-btn,
+.twh-disclaimer-btn,
+.twh-disclaimer-text,
+.twh-chip-more {
+    font-size: 13px;
+}
+
+@media (max-width: 760px) {
+    .twh-d-circles-tab {
+        padding: 12px 8px 32px;
+    }
+
+    .twh-digit-tools__rings {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
