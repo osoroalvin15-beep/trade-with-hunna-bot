@@ -27,6 +27,11 @@
     }
 }
 
+// Run Bot button/panel hidden outside the Run Bot tabs (stays mounted so a running bot is unaffected).
+.main__run-strategy-wrapper--hidden {
+    display: none !important;
+}
+
 .main {
     display: flex;
     overflow: hidden;
@@ -44,6 +49,37 @@
         border: none;
         max-width: 100%;
         width: 100%;
+        min-width: 0;
+
+        // Let the tab grid shrink to the screen instead of growing to its widest page
+        // (this is what made Risk Tools / Transparency / Plans spill off the display).
+        > div,
+        .dc-tabs {
+            min-width: 0;
+        }
+
+        .dc-tabs {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        // Many tabs: make the strip scrollable on desktop too, so none are unreachable.
+        .dc-tabs__list {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+        }
+
+        .dc-tabs__item {
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        // While the Run Bot button is showing on desktop, keep the last tabs clear of it.
+        @include desktop-screen {
+            &--run-visible .dc-tabs__list {
+                padding-inline-end: 24rem;
+            }
+        }
 
         &.no-scroll {
             overflow: hidden;

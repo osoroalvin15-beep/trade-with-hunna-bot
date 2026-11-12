@@ -102,6 +102,11 @@ const AppWrapper = observer(() => {
         'tutorial',
     ];
     const { isDesktop } = useDevice();
+    // The Run Bot button/panel only belongs in these tabs. Everywhere else it is hidden
+    // (kept mounted, so a running bot is unaffected) so it never covers other buttons.
+    // Add a tab id here (e.g. DBOT_TABS.FREE_BOTS) if you want Run Bot shown there too.
+    const RUN_BOT_TABS: number[] = [BOT_BUILDER];
+    const show_run_bot = RUN_BOT_TABS.includes(active_tab) || !!active_tour;
     const location = useLocation();
     const navigate = useNavigate();
     const [left_tab_shadow, setLeftTabShadow] = useState<boolean>(false);
@@ -391,6 +396,7 @@ const AppWrapper = observer(() => {
                 <div
                     className={classNames('main__container', {
                         'main__container--active': active_tour && active_tab === DASHBOARD && !isDesktop,
+                        'main__container--run-visible': show_run_bot,
                     })}
                 >
                     <div>
@@ -601,14 +607,24 @@ const AppWrapper = observer(() => {
                 </div>
             </div>
             <DesktopWrapper>
-                <div className='main__run-strategy-wrapper'>
+                <div
+                    className={classNames('main__run-strategy-wrapper', {
+                        'main__run-strategy-wrapper--hidden': !show_run_bot,
+                    })}
+                >
                     <RunStrategy />
                     <RunPanel />
                 </div>
                 <ChartModal />
                 <TradingViewModal />
             </DesktopWrapper>
-            <MobileWrapper>{!is_open && <RunPanel />}</MobileWrapper>
+            <MobileWrapper>
+                {!is_open && (
+                    <div className={classNames({ 'main__run-strategy-wrapper--hidden': !show_run_bot })}>
+                        <RunPanel />
+                    </div>
+                )}
+            </MobileWrapper>
             <Dialog
                 cancel_button_text={cancel_button_text || localize('Cancel')}
                 className='dc-dialog__wrapper--fixed'
