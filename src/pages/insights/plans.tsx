@@ -96,7 +96,6 @@ const Plans = () => {
                                 <button
                                     type='button'
                                     className='twi-btn'
-                                    disabled={!canRequest && billingReady}
                                     onClick={() => {
                                         setChosen(p.id as Exclude<TPlan, 'free'>);
                                         setSent(false);
@@ -111,7 +110,7 @@ const Plans = () => {
                 })}
             </div>
 
-            {chosen && plan && billingReady && (
+            {chosen && plan && (
                 <section className='twi-card' aria-live='polite'>
                     <h3 className='twi-card__title'>
                         {plan.name} plan, {kes(plan.price)} for {BILLING_DAYS} days
@@ -130,47 +129,69 @@ const Plans = () => {
                         <form onSubmit={submit}>
                             <ol className='twi-steps'>
                                 <li>
-                                    Pay <b>{kes(plan.price)}</b> by M-Pesa to {PAYMENT.method} number{' '}
-                                    <b>{PAYMENT.number}</b>
-                                    {PAYMENT.name ? ` (${PAYMENT.name})` : ''}. Use {PAYMENT.accountHint} as the
-                                    reference.
+                                    {PAYMENT.method === 'Send Money' ? (
+                                        <>
+                                            Open M-Pesa, choose <b>Send Money</b> and send <b>{kes(plan.price)}</b> to{' '}
+                                            <b>{PAYMENT.number}</b>
+                                            {PAYMENT.name ? ` (${PAYMENT.name})` : ''}.
+                                        </>
+                                    ) : (
+                                        <>
+                                            Pay <b>{kes(plan.price)}</b> by M-Pesa to {PAYMENT.method} number{' '}
+                                            <b>{PAYMENT.number}</b>
+                                            {PAYMENT.name ? ` (${PAYMENT.name})` : ''}. Use {PAYMENT.accountHint} as the
+                                            reference.
+                                        </>
+                                    )}
                                 </li>
-                                <li>
-                                    Type the phone number you paid from and the confirmation code from the M-Pesa
-                                    message.
-                                </li>
+                                {canRequest && (
+                                    <li>
+                                        Type the phone number you paid from and the confirmation code from the M-Pesa
+                                        message.
+                                    </li>
+                                )}
                                 <li>We check the payment and turn your plan on.</li>
                             </ol>
-                            <div className='twi-row2'>
-                                <label className='twi-field'>
-                                    <span>Phone number you paid from</span>
-                                    <span className='twi-field__box'>
-                                        <input
-                                            required
-                                            inputMode='tel'
-                                            value={phone}
-                                            onChange={e => setPhone(e.target.value)}
-                                            placeholder='0712 345 678'
-                                        />
-                                    </span>
-                                </label>
-                                <label className='twi-field'>
-                                    <span>M-Pesa confirmation code</span>
-                                    <span className='twi-field__box'>
-                                        <input
-                                            required
-                                            value={code}
-                                            onChange={e => setCode(e.target.value.toUpperCase())}
-                                            placeholder='QWE1RTY2UI'
-                                            maxLength={12}
-                                        />
-                                    </span>
-                                </label>
-                            </div>
+                            {canRequest ? (
+                                <div className='twi-row2'>
+                                    <label className='twi-field'>
+                                        <span>Phone number you paid from</span>
+                                        <span className='twi-field__box'>
+                                            <input
+                                                required
+                                                inputMode='tel'
+                                                value={phone}
+                                                onChange={e => setPhone(e.target.value)}
+                                                placeholder='0712 345 678'
+                                            />
+                                        </span>
+                                    </label>
+                                    <label className='twi-field'>
+                                        <span>M-Pesa confirmation code</span>
+                                        <span className='twi-field__box'>
+                                            <input
+                                                required
+                                                value={code}
+                                                onChange={e => setCode(e.target.value.toUpperCase())}
+                                                placeholder='QWE1RTY2UI'
+                                                maxLength={12}
+                                            />
+                                        </span>
+                                    </label>
+                                </div>
+                            ) : (
+                                <p className='twi-note'>
+                                    {billingReady
+                                        ? 'Log in with your Deriv account to send your payment details so we can turn your plan on.'
+                                        : 'Keep your M-Pesa confirmation message as proof of payment.'}
+                                </p>
+                            )}
                             {error && <p className='twi-error'>{error}</p>}
-                            <button className='twi-btn' disabled={busy} style={{ marginTop: 12 }}>
-                                {busy ? 'Sending…' : 'Send my payment details'}
-                            </button>
+                            {canRequest && (
+                                <button className='twi-btn' disabled={busy} style={{ marginTop: 12 }}>
+                                    {busy ? 'Sending…' : 'Send my payment details'}
+                                </button>
+                            )}
                         </form>
                     )}
                 </section>

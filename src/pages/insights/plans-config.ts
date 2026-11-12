@@ -31,6 +31,8 @@ export const PLANS: { id: TPlan; name: string; price: number; tagline: string; f
             'Performance for 30 days and your latest 500 trades',
             'Result-by-day chart',
             'Results by market and by trade type',
+            'Strategic market analysis',
+            'Latest bots',
         ],
     },
     {
@@ -38,14 +40,23 @@ export const PLANS: { id: TPlan; name: string; price: number; tagline: string; f
         name: 'Professional',
         price: 699,
         tagline: 'Find when and where you trade best',
-        features: ['Everything in Starter', 'Results by time of day', 'Download your trades as a CSV file'],
+        features: [
+            'Everything in Starter',
+            'Get signals early',
+            'Results by time of day',
+            'Download your trades as a CSV file',
+        ],
     },
     {
         id: 'advanced',
         name: 'Advanced',
         price: 1499,
-        tagline: 'The full history',
-        features: ['Everything in Professional', 'Performance for your latest 2,000 trades'],
+        tagline: 'The full history, plus VIP extras',
+        features: [
+            'Everything in Professional',
+            'Priority support and first access to new bots and tools',
+            'Performance for your latest 2,000 trades',
+        ],
     },
 ];
 
@@ -65,12 +76,17 @@ export const canUse = (plan: TPlan, feature: TFeature): boolean =>
     PLAN_ORDER.indexOf(plan) >= PLAN_ORDER.indexOf(REQUIRED[feature]);
 
 /**
- * OWNER: fill this in when you have an M-Pesa Till or Paybill.
- * Until `number` is set, the Plans page shows "Payments open soon" and nobody can send a request.
+ * OWNER: where customers pay. Currently M-Pesa Send Money to a phone number; switch `method` to 'Till' or
+ * 'Paybill' (and put that number here) if you open one. Until `number` is set, the Plans page shows "Payments open soon" and nobody can send a request.
  */
-export const PAYMENT: { method: 'Till' | 'Paybill'; number: string; name: string; accountHint: string } = {
-    method: 'Till',
-    number: '',
+export const PAYMENT: {
+    method: 'Till' | 'Paybill' | 'Send Money';
+    number: string;
+    name: string;
+    accountHint: string;
+} = {
+    method: 'Send Money',
+    number: '0768559607',
     name: '',
     accountHint: 'your Deriv account ID',
 };
