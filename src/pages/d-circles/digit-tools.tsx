@@ -1,4 +1,5 @@
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { publishAnalysis } from '@/components/ai-assistant/analysis-snapshot';
 import {
     classifyEvenOdd,
     classifyMatchDiffer,
@@ -202,6 +203,23 @@ const DigitTools = () => {
             fallPct: sharePercent(riseFall, 'F'),
         };
     }, [digits, prices, barrier, matchDigit]);
+
+    // Share the latest numbers with the floating assistant so it can read them out in plain words.
+    useEffect(() => {
+        if (!digits.length) return;
+        publishAnalysis({
+            symbol,
+            label: SYMBOLS.find(s => s.value === symbol)?.label ?? symbol,
+            samples: digits.length,
+            percents: stats.percents,
+            latestDigit: stats.currentDigit >= 0 ? stats.currentDigit : null,
+            evenPct: stats.evenPct,
+            oddPct: stats.oddPct,
+            risePct: stats.risePct,
+            fallPct: stats.fallPct,
+            updatedAt: Date.now(),
+        });
+    }, [digits, symbol, stats]);
 
     return (
         <div className='twh-digit-tools'>

@@ -32,6 +32,7 @@ export default defineConfig({
                 GD_CLIENT_ID: JSON.stringify(process.env.GD_CLIENT_ID),
                 GD_APP_ID: JSON.stringify(process.env.GD_APP_ID),
                 GD_API_KEY: JSON.stringify(process.env.GD_API_KEY),
+                AI_CHAT_URL: JSON.stringify(process.env.AI_CHAT_URL),
                 BILLING_SUPABASE_URL: JSON.stringify(process.env.BILLING_SUPABASE_URL),
                 BILLING_SUPABASE_ANON_KEY: JSON.stringify(process.env.BILLING_SUPABASE_ANON_KEY),
             },

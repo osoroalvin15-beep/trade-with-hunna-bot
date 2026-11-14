@@ -43,6 +43,7 @@ import { LegacyGuide1pxIcon } from '@deriv/quill-icons/Legacy';
 import { Localize, localize } from '@deriv-com/translations';
 import { useDevice } from '@deriv-com/ui';
 import RunPanel from '../../components/run-panel';
+import AiAssistant from '../../components/ai-assistant';
 import ScrollButtons from '../../components/scroll-buttons';
 import ChartModal from '../chart/chart-modal';
 import Dashboard from '../dashboard';
@@ -608,6 +609,7 @@ const AppWrapper = observer(() => {
                 </div>
             </div>
             <ScrollButtons raised={!isDesktop && show_run_bot} />
+            <AiAssistant onNavigate={handleTabChange} />
             <DesktopWrapper>
                 <div
                     className={classNames('main__run-strategy-wrapper', {

@@ -7,6 +7,8 @@ services:
     envVars:
       - key: CLIENT_ID
         sync: false
+      - key: AI_CHAT_URL
+        sync: false
       - key: BILLING_SUPABASE_URL
         sync: false
       - key: BILLING_SUPABASE_ANON_KEY
