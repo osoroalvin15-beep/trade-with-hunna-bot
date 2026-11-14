@@ -21,7 +21,9 @@
     cursor: grab;
     touch-action: none; // lets the finger drag the button instead of scrolling the page
     user-select: none;
-    animation: twh-ai-glow 2.8s ease-in-out infinite;
+    animation:
+        twh-ai-glow 2.8s ease-in-out infinite,
+        twh-ai-float 3s ease-in-out infinite;
 
     // green "online" dot in the top-right corner
     &::after {
@@ -37,8 +39,10 @@
         box-shadow: 0 0 8px 2px rgb(61 220 74 / 70%);
     }
 
+    // hold still while it is being pressed or dragged
     &:active {
         cursor: grabbing;
+        animation-play-state: paused;
     }
 
     &:focus-visible {
@@ -66,6 +70,17 @@
             0 0 0 3px rgb(180 150 255 / 35%),
             0 0 28px 12px rgb(140 130 255 / 70%),
             0 6px 16px rgb(0 0 0 / 40%);
+    }
+}
+
+@keyframes twh-ai-float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
     }
 }
 
