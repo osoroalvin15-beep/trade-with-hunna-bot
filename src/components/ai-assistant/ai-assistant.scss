@@ -5,17 +5,37 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 900;
-    letter-spacing: 0.02em;
-    color: #fff;
-    background: linear-gradient(135deg, #6a5cff, #2f6bff);
-    border: 2px solid rgb(255 255 255 / 75%);
+    letter-spacing: 0.01em;
+    color: #fff3b8; // cream text
+    text-shadow: 0 1px 2px rgb(120 40 110 / 55%);
+    background: radial-gradient(circle at 35% 30%, #f0a0e0 0%, #d878d0 55%, #c060c0 100%);
+    border: 2px solid rgb(255 190 240 / 85%);
     border-radius: 50%;
-    box-shadow: 0 6px 18px rgb(0 0 0 / 45%);
+    // soft lavender glow around the button
+    box-shadow:
+        0 0 0 3px rgb(180 150 255 / 25%),
+        0 0 22px 8px rgb(140 130 255 / 55%),
+        0 6px 16px rgb(0 0 0 / 40%);
     cursor: grab;
     touch-action: none; // lets the finger drag the button instead of scrolling the page
     user-select: none;
+    animation: twh-ai-glow 2.8s ease-in-out infinite;
+
+    // green "online" dot in the top-right corner
+    &::after {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        width: 13px;
+        height: 13px;
+        content: '';
+        background: #3ddc4a;
+        border: 2px solid rgb(255 255 255 / 85%);
+        border-radius: 50%;
+        box-shadow: 0 0 8px 2px rgb(61 220 74 / 70%);
+    }
 
     &:active {
         cursor: grabbing;
@@ -23,7 +43,35 @@
 
     &:focus-visible {
         outline: 3px solid #ffd54a;
-        outline-offset: 2px;
+        outline-offset: 3px;
+    }
+
+    // while the panel is open the button turns into a close button: no online dot needed
+    &.is-open::after {
+        display: none;
+    }
+}
+
+@keyframes twh-ai-glow {
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 3px rgb(180 150 255 / 25%),
+            0 0 18px 6px rgb(140 130 255 / 45%),
+            0 6px 16px rgb(0 0 0 / 40%);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 3px rgb(180 150 255 / 35%),
+            0 0 28px 12px rgb(140 130 255 / 70%),
+            0 6px 16px rgb(0 0 0 / 40%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .twh-ai-fab {
+        animation: none;
     }
 }
 

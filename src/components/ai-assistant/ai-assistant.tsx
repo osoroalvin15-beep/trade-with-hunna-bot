@@ -12,7 +12,7 @@ import { AI_CHAT_URL, askAssistant, TChatMessage } from './chat-api';
 import { analysisContext, readAnalysis } from './read-analysis';
 import './ai-assistant.scss';
 
-const SIZE = 56; // button size in px
+const SIZE = 64; // button size in px
 const MARGIN = 8; // keep this far from the screen edge
 const DRAG_THRESHOLD = 6; // px of movement before a press counts as a drag
 const STORAGE_KEY = 'twh-ai-button-pos';
