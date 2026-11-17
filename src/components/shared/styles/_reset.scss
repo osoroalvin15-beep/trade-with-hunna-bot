@@ -111,6 +111,43 @@ section {
 html {
     height: 100%;
     font-size: 10px;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Large / ultra-high-resolution screens (QHD, 4K and 8K TVs and monitors).
+// Almost all sizes in the app are rem-based, so growing the root size scales
+// the whole interface and keeps text, buttons and charts readable.
+@media (min-width: 1920px) {
+    html {
+        font-size: 11px;
+    }
+}
+
+@media (min-width: 2560px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 3840px) {
+    html {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 5120px) {
+    html {
+        font-size: 26px;
+    }
+}
+
+@media (min-width: 7680px) {
+    html {
+        font-size: 40px;
+    }
 }
 
 body {
